@@ -356,17 +356,33 @@
 	</xs:group>
 	<xs:simpleType name="getUserStatusErrorType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="invalid_user"/>
+			<xs:enumeration value="Element rule violated"/>
+			<xs:enumeration value="Unknown user"/>
+			<xs:enumeration value="User access denied"/>
+			<xs:enumeration value="User authentification failed"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="renewLoanErrorType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="invalid_user"/>
+			<xs:enumeration value="Unknown user"/>
+			<xs:enumeration value="User authentification failed"/>
+			<xs:enumeration value="User blocked"/>
+			<xs:enumeration value="Unknown item"/>
+			<xs:enumeration value="Item not checked out"/>
+			<xs:enumeration value="Item not renewable"/>
+			<xs:enumeration value="Maximum renewals exceeded"/>
+			<xs:enumeration value="Renewal not allowed - item has outstanding requests"/>
+			<xs:enumeration value="User inegible to remove this item"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="cancelOrderErrorType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="invalid_user"/>
+			<xs:enumeration value="Element rule violated"/>
+			<xs:enumeration value="Unknown user"/>
+			<xs:enumeration value="User access denied"/>
+			<xs:enumeration value="User authentification failed"/>
+			<xs:enumeration value="Unknown order"/>
+			<xs:enumeration value="Request already processed"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="orderStatusType">
