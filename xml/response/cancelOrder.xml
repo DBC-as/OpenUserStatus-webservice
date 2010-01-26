@@ -1,0 +1,15 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:open="http://oss.dbc.dk/ns/openuserstatus">
+   <soapenv:Body>
+      <open:cancelOrderResponse>
+         <!--You have a CHOICE of the next 2 items at this level-->
+         <!--1 or more repetitions:-->
+         <open:cancelOrderStatus>
+            <open:orderId>?</open:orderId>
+            <!--You have a CHOICE of the next 2 items at this level-->
+            <open:orderCancelled>?</open:orderCancelled>
+            <open:cancelOrderError>?</open:cancelOrderError>
+         </open:cancelOrderStatus>
+         <open:cancelOrderError>?</open:cancelOrderError>
+      </open:cancelOrderResponse>
+   </soapenv:Body>
+</soapenv:Envelope>

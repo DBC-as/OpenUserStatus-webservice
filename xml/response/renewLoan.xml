@@ -1,0 +1,16 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:open="http://oss.dbc.dk/ns/openuserstatus">
+   <soapenv:Body>
+      <open:renewLoanResponse>
+         <!--You have a CHOICE of the next 2 items at this level-->
+         <!--1 or more repetitions:-->
+         <open:renewLoanStatus>
+            <open:loanId>?</open:loanId>
+            <!--You have a CHOICE of the next 3 items at this level-->
+            <open:dateDue>?</open:dateDue>
+            <open:dateOfExpectedReply>?</open:dateOfExpectedReply>
+            <open:renewLoanError>?</open:renewLoanError>
+         </open:renewLoanStatus>
+         <open:renewLoanError>?</open:renewLoanError>
+      </open:renewLoanResponse>
+   </soapenv:Body>
+</soapenv:Envelope>
