@@ -1,0 +1,16 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:open="http://oss.dbc.dk/ns/openuserstatus">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <open:cancelOrderRequest>
+         <open:userId>?</open:userId>
+         <!--Optional:-->
+         <open:userPincode>?</open:userPincode>
+         <open:agencyId>?</open:agencyId>
+         <!--1 or more repetitions:-->
+         <open:cancelOrder>
+            <open:orderId>?</open:orderId>
+            <open:orderType>?</open:orderType>
+         </open:cancelOrder>
+      </open:cancelOrderRequest>
+   </soapenv:Body>
+</soapenv:Envelope>
