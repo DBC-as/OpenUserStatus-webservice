@@ -1,0 +1,35 @@
+Functions &amp; parameters:
+<ul>
+  <li>getUserStatus
+    <ul>
+      <li>userId:</li> User identification, CPR, Borrower number, ...
+      <li>userPincode:</li> 
+      <li>agencyId:</li> library code, like DK-790900 
+      <li>outputType:</li> json, php, xml
+      <li>callback:</li> for json-callback
+    </ul>
+  </li>
+  <li>renewLoan
+    <ul>
+      <li>userId:</li> User identification, CPR, Borrower number, ...
+      <li>userPincode:</li> 
+      <li>agencyId:</li> library code, like DK-790900 
+      <li>loanId:</li> Id of loan to renew (from getUserStatusResponse)
+      <li>outputType:</li> json, php, xml
+      <li>callback:</li> for json-callback
+    </ul>
+  </li>
+  <li>cancelOrder
+    <ul>
+      <li>userId:</li> User identification, CPR, Borrower number, ...
+      <li>userPincode:</li> 
+      <li>agencyId:</li> library code, like DK-790900 
+      <li>cancelOrder:</li> Id of order to cancel (from getUserStatusResponse)
+      <li>outputType:</li> json, php, xml
+      <li>callback:</li> for json-callback
+    </ul>
+  </li>
+</ul>
+
+<a href="openuserstatus.wsdl">The WSDL is here</a>
+
