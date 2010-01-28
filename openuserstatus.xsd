@@ -10,6 +10,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element ref="ous:serviceRequester"/>
 				<xs:element ref="ous:userId"/>
 				<xs:element ref="ous:userPincode" minOccurs="0"/>
 				<xs:element ref="ous:agencyId"/>
@@ -33,6 +34,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element ref="ous:serviceRequester"/>
 				<xs:element ref="ous:userId"/>
 				<xs:element ref="ous:userPincode" minOccurs="0"/>
 				<xs:element ref="ous:agencyId"/>
@@ -57,6 +59,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element ref="ous:serviceRequester"/>
 				<xs:element ref="ous:userId"/>
 				<xs:element ref="ous:userPincode" minOccurs="0"/>
 				<xs:element ref="ous:agencyId"/>
@@ -297,6 +300,11 @@
 	<xs:element name="reminderLevel" type="xs:integer">
 		<xs:annotation>
 			<xs:documentation>The number of times a reminder for a given item (loan or order) has been sent</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="serviceRequester" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>Identifier of the ageny using the service</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="userId" type="xs:string">
