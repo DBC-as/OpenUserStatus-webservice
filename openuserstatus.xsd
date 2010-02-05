@@ -222,7 +222,7 @@
 	</xs:element>
 	<xs:element name="dateDue" type="xs:dateTime">
 		<xs:annotation>
-			<xs:documentation>Return date for a loan</xs:documentation>
+			<xs:documentation>Last return date for a loan</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="dateOfExpectedReply" type="xs:dateTime">
@@ -307,7 +307,7 @@
 	</xs:element>
 	<xs:element name="serviceRequester" type="xs:string">
 		<xs:annotation>
-			<xs:documentation>Identifier of the ageny using the service</xs:documentation>
+			<xs:documentation>Identifier of the requester using the service</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="userId" type="xs:string">
@@ -367,6 +367,7 @@
 	</xs:group>
 	<xs:simpleType name="getUserStatusErrorType">
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="Service unavailable"/>
 			<xs:enumeration value="Element rule violated"/>
 			<xs:enumeration value="Unknown user"/>
 			<xs:enumeration value="User access denied"/>
@@ -375,6 +376,7 @@
 	</xs:simpleType>
 	<xs:simpleType name="renewLoanErrorType">
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="Service unavailable"/>
 			<xs:enumeration value="Unknown user"/>
 			<xs:enumeration value="User authentification failed"/>
 			<xs:enumeration value="User blocked"/>
@@ -388,6 +390,7 @@
 	</xs:simpleType>
 	<xs:simpleType name="cancelOrderErrorType">
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="Service unavailable"/>
 			<xs:enumeration value="Element rule violated"/>
 			<xs:enumeration value="Unknown user"/>
 			<xs:enumeration value="User access denied"/>
