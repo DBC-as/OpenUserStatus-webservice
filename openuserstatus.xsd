@@ -23,7 +23,10 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:choice>
-				<xs:element ref="ous:userStatus"/>
+				<xs:sequence>
+					<xs:element ref="ous:userId"/>
+					<xs:element ref="ous:userStatus"/>
+				</xs:sequence>
 				<xs:element ref="ous:getUserStatusError"/>
 			</xs:choice>
 		</xs:complexType>
