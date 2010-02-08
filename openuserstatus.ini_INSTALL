@@ -87,5 +87,3 @@ action[cancelOrder][] = loanId
 [HowRU]
 
 
-[openUserStatus]
-oci_credentials = vip_kig/gakpiv@dora1.dbc.dk

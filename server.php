@@ -72,7 +72,7 @@ class openUserStatus extends webServiceServer {
  *
  */
   private function _bib_info($bibno) {
-    $bib_info = new bibdk_info($this->config->get_value("oci_credentials", "openUserStatus"));
+    $bib_info = new bibdk_info($this->config->get_value("oci_credentials", "setup"));
     return $bib_info->get_bib_info($bibno);
   }
 
