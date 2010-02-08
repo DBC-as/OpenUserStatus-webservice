@@ -43,7 +43,7 @@ logfile = /tmp/openuserstatus.log
 verbose = WARNING+ERROR+FATAL+STAT+TIMER+TRACE+DEBUG+Z3950+OCI
 
 ; default output format
-default_output_type=xml
+; default_output_type=xml
 
 
 [rest]
@@ -86,3 +86,6 @@ action[cancelOrder][] = loanId
 
 [HowRU]
 
+
+[openUserStatus]
+oci_credentials = vip_kig/gakpiv@dora1.dbc.dk
