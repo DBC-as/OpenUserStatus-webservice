@@ -31,26 +31,6 @@ define("HTTP_PROXY", "phobos.dbc.dk:3128");
 
 class openUserStatus extends webServiceServer {
 
-/*
-
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:open="http://oss.dbc.dk/ns/openuserstatus">
-   <soapenv:Header/>
-   <soapenv:Body>
-      <open:getUserStatusRequest>
-         <open:userId>0406581055</open:userId>
-         <!--Optional:-->
-         <open:userPincode>1055</open:userPincode>
-         <open:agencyId>DK-100450</open:agencyId>
-      </open:getUserStatusRequest>
-   </soapenv:Body>
-</soapenv:Envelope> 
- 
-*/
-
-
-
-
-
 
 /** \brief _cdata
 *
@@ -106,7 +86,7 @@ class openUserStatus extends webServiceServer {
   * - userPincode
   * - agencyId
   * - loanId
-
+  * 
   * Response:
   * - renewLoanStatus
   * - - loanId
@@ -114,19 +94,44 @@ class openUserStatus extends webServiceServer {
   * - - dateOfExpectedReply
   * - - renewLoanError
   * - renewLoanError
+  *
   */
   function renewLoan($param) {
-    //$oci = new Oci($this->config->get_value("agency_credentials","setup"));
-    //$oci->set_charset("UTF8");
-    //$oci->connect();
+    $userId = $param->userId->_value;
+    $userPincode = $param->userPincode->_value;
+    $agencyId = $param->agencyId->_value;
+    $bib_id = substr($agencyId, 3);
+    if (is_array($param->loanId))
+      foreach ($param->loanId as $l) $loanIds[] = $l->_value;
+    else
+      $loanIds[] = $param->loanId->_value;
 
-    $res->error->_value = "invalid_user";
-    $one_item->loanId->_value = $some_id;
-    $one_item->dateDue->_value = $some_date;
-    $res->renewLoanStatus[]->_value = $one_item;
+    $fav_info = $this->_bib_info($bib_id);
 
-    $ret->renewLoanResponse->_value = $res;
-    var_dump($param); die();
+    if (strtoupper($fav_info["ncip_renew"]) !== "J") {  // Kan slutbrugerne forny laan for dette bibliotek?
+      $response->renewLoanError->_value = "User is not allowed to make NCIP renew request";
+    } else {
+      foreach ($loanIds as $loanId) {
+        $ncip_renew = new ncip();
+        $renew = $ncip_renew->request($fav_info["ncip_renew_address"],
+                                      array("Ncip" => "RenewItem",
+                                            "FromAgencyId" => "DK-190101",
+                                            "FromAgencyAuthentication" => $fav_info["ncip_renew_password"],
+                                            "ToAgencyId" => $agencyId,
+                                            "UniqueUserId" => array("UserIdentifierValue" => $userId, "UniqueAgencyId" => $agencyId),
+                                            "UniqueItemId" => array("ItemIdentifierValue" => $loanId, "UniqueAgencyId" => $agencyId ) ) );
+        unset($loanStatus);
+        $loanStatus->loanId->_value = $loanId;
+        if (isset($renew["Problem"])) {
+          $loanStatus->renewLoanError->_value = $renew["Problem"]["Type"];
+        } else {
+          if (isset($renew["DateDue"])) $loanStatus->dateDue->_value = $renew["DateDue"];
+          if (isset($renew["DateOfExpectedReply"])) $loanStatus->dateOfExpectedReply->_value = $renew["DateOfExpectedReply"];
+        }
+        $response->renewLoanStatus[]->_value = $loanStatus;
+      }
+    }
+    $ret->renewLoanResponse->_value = $response;
     return $ret;
   }
 
@@ -137,15 +142,55 @@ class openUserStatus extends webServiceServer {
   * - userPincode
   * - agencyId
   * - cancelOrder
+  *
   * Response:
   * - cancelOrderStatus
   * - - orderId
   * - - orderCancelled
   * - - cancelOrderError
   * - cancelOrderError
+  *
   */
   function cancelOrder($param) {
-    var_dump($param); die();
+    $userId = $param->userId->_value;
+    $userPincode = $param->userPincode->_value;
+    $agencyId = $param->agencyId->_value;
+    $bib_id = substr($agencyId, 3);
+    unset($cancelOrders);
+    if (is_array($param->cancelOrder))
+      foreach ($param->cancelOrder as $cOrder) $cancelOrders[] = array("orderId" => $cOrder->_value->orderId->_value, "orderType" => $cOrder->_value->orderType->_value );
+    else
+      $cancelOrders[] = array("orderId" => $param->cancelOrder->_value->orderId->_value, "orderType" => $param->cancelOrder->_value->orderType->_value );
+
+    $fav_info = $this->_bib_info($bib_id);
+
+    if (strtoupper($fav_info["ncip_cancel"]) !== "J") {  // Kan slutbrugerne slette reserveringer for dette bibliotek?
+      $response->cancelOrderError->_value = "User is not allowed to make NCIP cancel request";
+    } else {
+      foreach ($cancelOrders as $cancelOrder) {
+        $ncip_cancel = new ncip();
+        $cancel = $ncip_cancel->request($fav_info["ncip_cancel_address"],
+                                        array("Ncip" => "CancelRequestItem",
+                                              "FromAgencyId" => "DK-190101",
+                                              "FromAgencyAuthentication" => $fav_info["ncip_cancel_password"],
+                                              "ToAgencyId" => $agencyId,
+                                              "UniqueUserId" => array("UserIdentifierValue" => $user_id, "UniqueAgencyId" => $agencyId),
+                                              "UniqueRequestId" => array("RequestIdentifierValue" => $cancelOrder["orderId"], "UniqueAgencyId" => $agencyId),
+                                              "RequestType" => $cancelOrder["orderType"] ) );
+        unset($orderStatus);
+        $orderStatus->orderId->_value = $cancelOrder["orderId"];
+        if (isset($cancel["Problem"]))
+          $orderStatus->cancelOrderError->_value = $cancel["Problem"]["Type"];
+        else
+          $orderStatus->orderCancelled->_value = "";
+        $response->cancelOrderStatus[]->_value = $orderStatus;
+      }
+    }
+    $ret->cancelOrderResponse->_value = $response;
+    return $ret;
+
+
+
   }
 
  /** \brief getUserRequest - 
@@ -272,6 +317,7 @@ class openUserStatus extends webServiceServer {
             }
           }
       }
+      $response->userId->_value = $userId;
       $response->userStatus->_value->loanedItems->_value->loansCount->_value = count($lookup_items);
       if (is_array($lookup_items))
         foreach($lookup_items as $item) {
