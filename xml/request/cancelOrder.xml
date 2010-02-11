@@ -2,10 +2,10 @@
    <soapenv:Header/>
    <soapenv:Body>
       <open:cancelOrderRequest>
-         <open:userId>?</open:userId>
+         <open:userId>0406581055</open:userId>
          <!--Optional:-->
-         <open:userPincode>?</open:userPincode>
-         <open:agencyId>?</open:agencyId>
+         <open:userPincode>1055</open:userPincode>
+         <open:agencyId>DK-100450</open:agencyId>
          <!--1 or more repetitions:-->
          <open:cancelOrder>
             <open:orderId>?</open:orderId>
