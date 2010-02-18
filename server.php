@@ -32,18 +32,12 @@ define("HTTP_PROXY", "phobos.dbc.dk:3128");
 class openUserStatus extends webServiceServer {
 
 
-/** \brief _cdata
-*
-*/
-  private function _cdata($data) { return "<![CDATA[" . $data . "]]>"; }
-
-
-/** \brief _cdata
+/** \brief _set
 *
 */
   private function _set(&$target, $name, $source) {
     if (empty($source)) return;
-    $target->$name->_value = $this->_cdata($source);
+    $target->$name->_value = $source;
   }
   
 
@@ -76,12 +70,28 @@ class openUserStatus extends webServiceServer {
   }
 
 
+/** \brief _build_error
+ *
+ * @param string Name
+ * 
+ * @return Object error
+ *
+ */
+  private function _build_error($name, $text) {
+    $resp_name = $name . "Response";
+    $error_name = $name . "Error";
+    $ret->$resp_name->_value->$error_name->_value = $text;
+    return $ret;
+  }
+
+
 //==============================================================================
 
 
  /** \brief renewLoan - 
   *
   * Request:
+  * - serviceRequester
   * - userId
   * - userPincode
   * - agencyId
@@ -97,40 +107,43 @@ class openUserStatus extends webServiceServer {
   *
   */
   function renewLoan($param) {
+    if (!isset($param->serviceRequester)) return $this->_build_error("renewLoan", "Element rule violated");
+    $servicerRequester = $param->serviceRequester->_value;
+    if (!isset($param->userId)) return $this->_build_error("renewLoan", "Element rule violated");
     $userId = $param->userId->_value;
     $userPincode = $param->userPincode->_value;
+    if (!isset($param->agencyId)) return $this->_build_error("renewLoan", "Element rule violated");
     $agencyId = $param->agencyId->_value;
     $bib_id = substr($agencyId, 3);
+    if (!isset($param->loanId)) return $this->_build_error("renewLoan", "Element rule violated");
     if (is_array($param->loanId))
       foreach ($param->loanId as $l) $loanIds[] = $l->_value;
     else
       $loanIds[] = $param->loanId->_value;
 
     $fav_info = $this->_bib_info($bib_id);
+    if (strtoupper($fav_info["ncip_renew"]) !== "J") return $this->_build_error("renewLoan", "Service unavailable");
 
-    if (strtoupper($fav_info["ncip_renew"]) !== "J") {  // Kan slutbrugerne forny laan for dette bibliotek?
-      $response->renewLoanError->_value = "User is not allowed to make NCIP renew request";
-    } else {
-      foreach ($loanIds as $loanId) {
-        $ncip_renew = new ncip();
-        $renew = $ncip_renew->request($fav_info["ncip_renew_address"],
-                                      array("Ncip" => "RenewItem",
-                                            "FromAgencyId" => "DK-190101",
-                                            "FromAgencyAuthentication" => $fav_info["ncip_renew_password"],
-                                            "ToAgencyId" => $agencyId,
-                                            "UniqueUserId" => array("UserIdentifierValue" => $userId, "UniqueAgencyId" => $agencyId),
-                                            "UniqueItemId" => array("ItemIdentifierValue" => $loanId, "UniqueAgencyId" => $agencyId ) ) );
-        unset($loanStatus);
-        $loanStatus->loanId->_value = $loanId;
-        if (isset($renew["Problem"])) {
-          $loanStatus->renewLoanError->_value = $renew["Problem"]["Type"];
-        } else {
-          if (isset($renew["DateDue"])) $loanStatus->dateDue->_value = $renew["DateDue"];
-          if (isset($renew["DateOfExpectedReply"])) $loanStatus->dateOfExpectedReply->_value = $renew["DateOfExpectedReply"];
-        }
-        $response->renewLoanStatus[]->_value = $loanStatus;
+    foreach ($loanIds as $loanId) {
+      $ncip_renew = new ncip();
+      $renew = $ncip_renew->request($fav_info["ncip_renew_address"],
+                                    array("Ncip" => "RenewItem",
+                                          "FromAgencyId" => "DK-190101",
+                                          "FromAgencyAuthentication" => $fav_info["ncip_renew_password"],
+                                          "ToAgencyId" => $agencyId,
+                                          "UniqueUserId" => array("UserIdentifierValue" => $userId, "UniqueAgencyId" => $agencyId),
+                                          "UniqueItemId" => array("ItemIdentifierValue" => $loanId, "UniqueAgencyId" => $agencyId ) ) );
+      unset($loanStatus);
+      $loanStatus->loanId->_value = $loanId;
+      if (isset($renew["Problem"])) {
+        $loanStatus->renewLoanError->_value = $renew["Problem"]["Type"];
+      } else {
+        if (isset($renew["DateDue"])) $loanStatus->dateDue->_value = $renew["DateDue"];
+        if (isset($renew["DateOfExpectedReply"])) $loanStatus->dateOfExpectedReply->_value = $renew["DateOfExpectedReply"];
       }
+      $response->renewLoanStatus[]->_value = $loanStatus;
     }
+
     $ret->renewLoanResponse->_value = $response;
     return $ret;
   }
@@ -138,6 +151,7 @@ class openUserStatus extends webServiceServer {
  /** \brief cancelOrder - 
   *
   * Request:
+  * - serviceRequester
   * - userId
   * - userPincode
   * - agencyId
@@ -152,10 +166,15 @@ class openUserStatus extends webServiceServer {
   *
   */
   function cancelOrder($param) {
+    if (!isset($param->serviceRequester)) return $this->_build_error("cancelOrder", "Element rule violated");
+    $servicerRequester = $param->serviceRequester->_value;
+    if (!isset($param->userId)) return $this->_build_error("cancelOrder", "Element rule violated");
     $userId = $param->userId->_value;
     $userPincode = $param->userPincode->_value;
+    if (!isset($param->agencyId)) return $this->_build_error("cancelOrder", "Element rule violated");
     $agencyId = $param->agencyId->_value;
     $bib_id = substr($agencyId, 3);
+    if (!isset($param->cancelOrder)) return $this->_build_error("cancelOrder", "Element rule violated");
     unset($cancelOrders);
     if (is_array($param->cancelOrder))
       foreach ($param->cancelOrder as $cOrder) $cancelOrders[] = array("orderId" => $cOrder->_value->orderId->_value, "orderType" => $cOrder->_value->orderType->_value );
@@ -163,39 +182,34 @@ class openUserStatus extends webServiceServer {
       $cancelOrders[] = array("orderId" => $param->cancelOrder->_value->orderId->_value, "orderType" => $param->cancelOrder->_value->orderType->_value );
 
     $fav_info = $this->_bib_info($bib_id);
+    if (strtoupper($fav_info["ncip_cancel"]) !== "J") return $this->_build_error("cancelOrder", "Service unavailable");
 
-    if (strtoupper($fav_info["ncip_cancel"]) !== "J") {  // Kan slutbrugerne slette reserveringer for dette bibliotek?
-      $response->cancelOrderError->_value = "User is not allowed to make NCIP cancel request";
-    } else {
-      foreach ($cancelOrders as $cancelOrder) {
-        $ncip_cancel = new ncip();
-        $cancel = $ncip_cancel->request($fav_info["ncip_cancel_address"],
-                                        array("Ncip" => "CancelRequestItem",
-                                              "FromAgencyId" => "DK-190101",
-                                              "FromAgencyAuthentication" => $fav_info["ncip_cancel_password"],
-                                              "ToAgencyId" => $agencyId,
-                                              "UniqueUserId" => array("UserIdentifierValue" => $user_id, "UniqueAgencyId" => $agencyId),
-                                              "UniqueRequestId" => array("RequestIdentifierValue" => $cancelOrder["orderId"], "UniqueAgencyId" => $agencyId),
-                                              "RequestType" => $cancelOrder["orderType"] ) );
-        unset($orderStatus);
-        $orderStatus->orderId->_value = $cancelOrder["orderId"];
-        if (isset($cancel["Problem"]))
-          $orderStatus->cancelOrderError->_value = $cancel["Problem"]["Type"];
-        else
-          $orderStatus->orderCancelled->_value = "";
-        $response->cancelOrderStatus[]->_value = $orderStatus;
-      }
+    foreach ($cancelOrders as $cancelOrder) {
+      $ncip_cancel = new ncip();
+      $cancel = $ncip_cancel->request($fav_info["ncip_cancel_address"],
+                                      array("Ncip" => "CancelRequestItem",
+                                            "FromAgencyId" => "DK-190101",
+                                            "FromAgencyAuthentication" => $fav_info["ncip_cancel_password"],
+                                            "ToAgencyId" => $agencyId,
+                                            "UniqueUserId" => array("UserIdentifierValue" => $user_id, "UniqueAgencyId" => $agencyId),
+                                            "UniqueRequestId" => array("RequestIdentifierValue" => $cancelOrder["orderId"], "UniqueAgencyId" => $agencyId),
+                                            "RequestType" => $cancelOrder["orderType"] ) );
+      unset($orderStatus);
+      $orderStatus->orderId->_value = $cancelOrder["orderId"];
+      if (isset($cancel["Problem"]))
+        $orderStatus->cancelOrderError->_value = $cancel["Problem"]["Type"];
+      else
+        $orderStatus->orderCancelled->_value = "";
+      $response->cancelOrderStatus[]->_value = $orderStatus;
     }
     $ret->cancelOrderResponse->_value = $response;
     return $ret;
-
-
-
   }
 
  /** \brief getUserRequest - 
   *
   * Request:
+  * - serviceRequester
   * - userId
   * - userPincode
   * - agencyId
@@ -263,130 +277,130 @@ class openUserStatus extends webServiceServer {
   * - - - - reminderLevel
   */
   function getUserStatus($param) {
-
+    if (!isset($param->serviceRequester)) return $this->_build_error("getUserStatus", "Element rule violated");
+    $servicerRequester = $param->serviceRequester->_value;
+    if (!isset($param->userId)) return $this->_build_error("getUserStatus", "Element rule violated");
     $userId = $param->userId->_value;
     $userPincode = $param->userPincode->_value;
+    if (!isset($param->agencyId)) return $this->_build_error("getUserStatus", "Element rule violated");
     $agencyId = $param->agencyId->_value;
     $bib_id = substr($agencyId, 3);
 
     $fav_info = $this->_bib_info($bib_id);
     $loan_items = array();
+    if (strtoupper($fav_info["ncip_lookup_user"]) !== "J") return $this->_build_error("getUserStatus", "Service unavailable");
 
-    if (strtoupper($fav_info["ncip_lookup_user"]) !== "J") {  // Kan slutbrugerne bede om at se sine bestillinger og laan?
-      $response->getUserStatusError->_value = "User is not allowed to make NCIP lookup requests";
-    } else {
-      $ncip_lookup_user = new ncip();
-      $lookup_user = $ncip_lookup_user->request($fav_info["ncip_lookup_user_address"],
-                                                array("Ncip" => "LookupUser",
-                                                      "FromAgencyId" => "DK-190101",
-                                                      "FromAgencyAuthentication" => $fav_info["ncip_lookup_user_password"],
-                                                      "ToAgencyId" => $agencyId,
-                                                      "UserId" => $userId,
-                                                      "UserPIN" => $userPincode ) );
-      if (isset($lookup_user["Problem"])) {
-        $response->getUserStatusError->_value = $lookup_user["Problem"]["Type"];
-      } else {
-        $lookup_items = array();
-        if (is_array($lookup_user["LoanedItem"]))
-          foreach ($lookup_user["LoanedItem"] as $loaned_item) {
-            $ncip_lookup_item = new ncip();
-            $lookup_item = $ncip_lookup_item->request($fav_info["ncip_lookup_user_address"],
-                                                      array("Ncip" => "LookupItem",
-                                                            "FromAgencyId" => "DK-190101",
-                                                            "FromAgencyAuthentication" => $fav_info["ncip_lookup_user_password"],
-                                                            "ToAgencyId" => $agencyId,
-                                                            "UniqueItemId" => $loaned_item["UniqueItemId"] ) );
-            if (!isset($lookup_item["Problem"])) {  // Ingen fejl meldes, hvis der konstateres problemer...
-              $lookup_item = array_merge($lookup_item, $loaned_item);
-              $lookup_items[] = $lookup_item;
-            }
-          }
-        $lookup_requests = array();
-        if (is_array($lookup_user["RequestedItem"]))
-          foreach ($lookup_user["RequestedItem"] as $requested_item) {
-            $ncip_lookup_request = new ncip();
-            $lookup_request = $ncip_lookup_request->request($fav_info["ncip_lookup_user_address"],
-                                                            array("Ncip" => "LookupRequest",
-                                                                  "FromAgencyId" => "DK-190101",
-                                                                  "FromAgencyAuthentication" => $fav_info["ncip_lookup_user_password"],
-                                                                  "ToAgencyId" => $agencyId,
-                                                                  "UniqueRequestId" => $requested_item["UniqueRequestId"] ) );
-            if (!isset($lookup_request["Problem"])) {  // Ingen fejl meldes, hvis der konstateres problemer...
-              $lookup_request = array_merge($requested_item, $lookup_request);
-              $lookup_requests[] = $lookup_request;  
-            }
-          }
+    $ncip_lookup_user = new ncip();
+    $lookup_user = $ncip_lookup_user->request($fav_info["ncip_lookup_user_address"],
+                                              array("Ncip" => "LookupUser",
+                                                    "FromAgencyId" => "DK-190101",
+                                                    "FromAgencyAuthentication" => $fav_info["ncip_lookup_user_password"],
+                                                    "ToAgencyId" => $agencyId,
+                                                    "UserId" => $userId,
+                                                    "UserPIN" => $userPincode ) );
+    if (isset($lookup_user["Problem"])) return $this->_build_error("getUserStatus", $lookup_user["Problem"]["Type"]);
+
+    $lookup_items = array();
+    if (is_array($lookup_user["LoanedItem"]))
+      foreach ($lookup_user["LoanedItem"] as $loaned_item) {
+        $ncip_lookup_item = new ncip();
+        $lookup_item = $ncip_lookup_item->request($fav_info["ncip_lookup_user_address"],
+                                                  array("Ncip" => "LookupItem",
+                                                        "FromAgencyId" => "DK-190101",
+                                                        "FromAgencyAuthentication" => $fav_info["ncip_lookup_user_password"],
+                                                        "ToAgencyId" => $agencyId,
+                                                        "UniqueItemId" => $loaned_item["UniqueItemId"] ) );
+        if (!isset($lookup_item["Problem"])) {  // Ingen fejl meldes, hvis der konstateres problemer...
+          $lookup_item = array_merge($lookup_item, $loaned_item);
+          $lookup_items[] = $lookup_item;
+        }
       }
-      $response->userId->_value = $userId;
-      $response->userStatus->_value->loanedItems->_value->loansCount->_value = count($lookup_items);
-      if (is_array($lookup_items))
-        foreach($lookup_items as $item) {
-          unset($loan);
-          $loan->loanId->_value = $item["UniqueItemId"]["ItemIdentifierValue"];
-          $this->_set($loan, "author", $item["Author"]);
-          $this->_set($loan, "authorOfComponent", $item["AuthorOfComponent"]);
-          $this->_set($loan, "bibliographicItemId", $item["BibliographicItemId"]);
-          $this->_set($loan, "bibliographicRecordId", $item["BibliographicRecordId"]);
-          $this->_set($loan, "componentId", $item["ComponentId"]);
-          $this->_set($loan, "edition", $item["Edition"]);
-          $this->_set($loan, "pagination", $item["Pagination"]);
-          $this->_set($loan, "placeOfPublication", $item["PlaceOfPublication"]);
-          $this->_set($loan, "publicationDateOfComponent", $item["PublicationDateOfComponent"]);
-          $this->_set($loan, "publisher", $item["Publisher"]);
-          $this->_set($loan, "seriesTitleNumber", $item["SeriesTitleNumber"]);
-          $this->_set($loan, "titleOfComponent", $item["TitleOfComponent"]);
-          $this->_set($loan, "bibliographicLevel", $item["BibliographicLevel"]);
-          $this->_set($loan, "sponsoringBody", $item["SponsoringBody"]);
-          $this->_set($loan, "electronicDataFormatType", $item["ElectronicDataFormatType"]);
-          $this->_set($loan, "language", $item["Language"]);
-          $this->_set($loan, "mediumType", $item["MediumType"]);
-          $this->_set($loan, "publicationDate", $item["PublicationDate"]);
-          $this->_set($loan, "title", $item["Title"]);
-          $this->_set($loan, "dateDue", $item["DateDue"]);
-          $this->_set($loan, "reminderLevel", $item["ReminderLevel"]);
-          $this->_set($loan, "loanRecallDate", $item["DateRecalled"]);
-          $response->userStatus->_value->loanedItems->_value->loan[]->_value = $loan;
+    $lookup_requests = array();
+    if (is_array($lookup_user["RequestedItem"]))
+      foreach ($lookup_user["RequestedItem"] as $requested_item) {
+        $ncip_lookup_request = new ncip();
+        $lookup_request = $ncip_lookup_request->request($fav_info["ncip_lookup_user_address"],
+                                                        array("Ncip" => "LookupRequest",
+                                                              "FromAgencyId" => "DK-190101",
+                                                              "FromAgencyAuthentication" => $fav_info["ncip_lookup_user_password"],
+                                                              "ToAgencyId" => $agencyId,
+                                                              "UniqueRequestId" => $requested_item["UniqueRequestId"] ) );
+        if (!isset($lookup_request["Problem"])) {  // Ingen fejl meldes, hvis der konstateres problemer...
+          $lookup_request = array_merge($requested_item, $lookup_request);
+          $lookup_requests[] = $lookup_request;  
         }
-      $response->userStatus->_value->orderedItems->_value->ordersCount->_value = count($lookup_requests);
-      if (is_array($lookup_requests))
-        foreach($lookup_requests as $request) {
-          unset($res);
-          $res->orderId->_value = $request["UniqueRequestId"]["RequestIdentifierValue"];
-          $this->_set($res, "author", $request["Author"]);
-          $this->_set($res, "authorOfComponent", $request["AuthorOfComponent"]);
-          $this->_set($res, "bibliographicItemId", $request["BibliographicItemId"]);
-          $this->_set($res, "bibliographicRecordId", $request["BibliographicRecordId"]);
-          $this->_set($res, "componentId", $request["ComponentId"]);
-          $this->_set($res, "edition", $request["Edition"]);
-          $this->_set($res, "pagination", $request["Pagination"]);
-          $this->_set($res, "placeOfPublication", $request["PlaceOfPublication"]);
-          $this->_set($res, "publicationDateOfComponent", $request["PublicationDateOfComponent"]);
-          $this->_set($res, "publisher", $request["Publisher"]);
-          $this->_set($res, "seriesTitleNumber", $request["SeriesTitleNumber"]);
-          $this->_set($res, "titleOfComponent", $request["TitleOfComponent"]);
-          $this->_set($res, "bibliographicLevel", $request["BibliographicLevel"]);
-          $this->_set($res, "sponsoringBody", $request["SponsoringBody"]);
-          $this->_set($res, "electronicDataFormatType", $request["ElectronicDataFormatType"]);
-          $this->_set($res, "language", $request["Language"]);
-          $this->_set($res, "mediumType", $request["MediumType"]);
-          $this->_set($res, "publicationDate", $request["PublicationDate"]);
-          $this->_set($res, "title", $request["Title"]);
-          $this->_set($res, "orderStatus", $request["RequestStatusType"]);
-          $this->_set($res, "orderDate", $request["DatePlaced"]);
-          $this->_set($res, "orderType", $request["RequestType"]);
-          $this->_set($res, "dateAvailable", $request["DateAvailable"]);
-          $this->_set($res, "holdQueuePosition", $request["HoldQueuePosition"]);
-          $this->_set($res, "needBeforeDate", $request["NeedBeforeDate"]);
-          $this->_set($res, "orderExpiryDate", $request["HoldPickupDate"]);
-          $this->_set($res, "pickupDate", $request["PickupDate"]);
-          $this->_set($res, "pickupExpiryDate", $request["PickupExpiryDate"]);
-          $this->_set($res, "reminderLevel", $request["ReminderLevel"]);
-          $response->userStatus->_value->orderedItems->_value->order[]->_value = $res;
-        }
-    }
+      }
+
+    $response->userId->_value = $userId;
+    $response->userStatus->_value->loanedItems->_value->loansCount->_value = count($lookup_items);
+    if (is_array($lookup_items))
+      foreach($lookup_items as $item) {
+        unset($loan);
+        $loan->loanId->_value = $item["UniqueItemId"]["ItemIdentifierValue"];
+        $this->_set($loan, "author", $item["Author"]);
+        $this->_set($loan, "authorOfComponent", $item["AuthorOfComponent"]);
+        $this->_set($loan, "bibliographicItemId", $item["BibliographicItemId"]);
+        $this->_set($loan, "bibliographicRecordId", $item["BibliographicRecordId"]);
+        $this->_set($loan, "componentId", $item["ComponentId"]);
+        $this->_set($loan, "edition", $item["Edition"]);
+        $this->_set($loan, "pagination", $item["Pagination"]);
+        $this->_set($loan, "placeOfPublication", $item["PlaceOfPublication"]);
+        $this->_set($loan, "publicationDateOfComponent", $item["PublicationDateOfComponent"]);
+        $this->_set($loan, "publisher", $item["Publisher"]);
+        $this->_set($loan, "seriesTitleNumber", $item["SeriesTitleNumber"]);
+        $this->_set($loan, "titleOfComponent", $item["TitleOfComponent"]);
+        $this->_set($loan, "bibliographicLevel", $item["BibliographicLevel"]);
+        $this->_set($loan, "sponsoringBody", $item["SponsoringBody"]);
+        $this->_set($loan, "electronicDataFormatType", $item["ElectronicDataFormatType"]);
+        $this->_set($loan, "language", $item["Language"]);
+        $this->_set($loan, "mediumType", $item["MediumType"]);
+        $this->_set($loan, "publicationDate", $item["PublicationDate"]);
+        $this->_set($loan, "title", $item["Title"]);
+        $this->_set($loan, "dateDue", $item["DateDue"]);
+        $this->_set($loan, "reminderLevel", $item["ReminderLevel"]);
+        $this->_set($loan, "loanRecallDate", $item["DateRecalled"]);
+        $response->userStatus->_value->loanedItems->_value->loan[]->_value = $loan;
+      }
+    $response->userStatus->_value->orderedItems->_value->ordersCount->_value = count($lookup_requests);
+    if (is_array($lookup_requests))
+      foreach($lookup_requests as $request) {
+        unset($res);
+        $res->orderId->_value = $request["UniqueRequestId"]["RequestIdentifierValue"];
+        $this->_set($res, "author", $request["Author"]);
+        $this->_set($res, "authorOfComponent", $request["AuthorOfComponent"]);
+        $this->_set($res, "bibliographicItemId", $request["BibliographicItemId"]);
+        $this->_set($res, "bibliographicRecordId", $request["BibliographicRecordId"]);
+        $this->_set($res, "componentId", $request["ComponentId"]);
+        $this->_set($res, "edition", $request["Edition"]);
+        $this->_set($res, "pagination", $request["Pagination"]);
+        $this->_set($res, "placeOfPublication", $request["PlaceOfPublication"]);
+        $this->_set($res, "publicationDateOfComponent", $request["PublicationDateOfComponent"]);
+        $this->_set($res, "publisher", $request["Publisher"]);
+        $this->_set($res, "seriesTitleNumber", $request["SeriesTitleNumber"]);
+        $this->_set($res, "titleOfComponent", $request["TitleOfComponent"]);
+        $this->_set($res, "bibliographicLevel", $request["BibliographicLevel"]);
+        $this->_set($res, "sponsoringBody", $request["SponsoringBody"]);
+        $this->_set($res, "electronicDataFormatType", $request["ElectronicDataFormatType"]);
+        $this->_set($res, "language", $request["Language"]);
+        $this->_set($res, "mediumType", $request["MediumType"]);
+        $this->_set($res, "publicationDate", $request["PublicationDate"]);
+        $this->_set($res, "title", $request["Title"]);
+        $this->_set($res, "orderStatus", $request["RequestStatusType"]);
+        $this->_set($res, "orderDate", $request["DatePlaced"]);
+        $this->_set($res, "orderType", $request["RequestType"]);
+        $this->_set($res, "dateAvailable", $request["DateAvailable"]);
+        $this->_set($res, "holdQueuePosition", $request["HoldQueuePosition"]);
+        $this->_set($res, "needBeforeDate", $request["NeedBeforeDate"]);
+        $this->_set($res, "orderExpiryDate", $request["HoldPickupDate"]);
+        $this->_set($res, "pickupDate", $request["PickupDate"]);
+        $this->_set($res, "pickupExpiryDate", $request["PickupExpiryDate"]);
+        $this->_set($res, "reminderLevel", $request["ReminderLevel"]);
+        $response->userStatus->_value->orderedItems->_value->order[]->_value = $res;
+      }
     $ret->getUserStatusResponse->_value = $response;
     return $ret;
   }
+
 }
 
 /* 
