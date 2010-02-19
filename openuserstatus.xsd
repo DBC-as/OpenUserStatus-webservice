@@ -10,10 +10,12 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element ref="ous:agencyId"/>
+				<xs:element ref="ous:callback" minOccurs="0"/>
+				<xs:element ref="ous:outputType" minOccurs="0"/>
 				<xs:element ref="ous:serviceRequester"/>
 				<xs:element ref="ous:userId"/>
 				<xs:element ref="ous:userPincode" minOccurs="0"/>
-				<xs:element ref="ous:agencyId"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -23,11 +25,11 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:choice>
+				<xs:element ref="ous:getUserStatusError"/>
 				<xs:sequence>
 					<xs:element ref="ous:userId"/>
 					<xs:element ref="ous:userStatus"/>
 				</xs:sequence>
-				<xs:element ref="ous:getUserStatusError"/>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
@@ -37,11 +39,13 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element ref="ous:agencyId"/>
+				<xs:element ref="ous:callback" minOccurs="0"/>
+				<xs:element ref="ous:loanId" maxOccurs="unbounded"/>
+				<xs:element ref="ous:outputType" minOccurs="0"/>
 				<xs:element ref="ous:serviceRequester"/>
 				<xs:element ref="ous:userId"/>
 				<xs:element ref="ous:userPincode" minOccurs="0"/>
-				<xs:element ref="ous:agencyId"/>
-				<xs:element ref="ous:loanId" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -51,8 +55,8 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:choice>
-				<xs:element ref="ous:renewLoanStatus" maxOccurs="unbounded"/>
 				<xs:element ref="ous:renewLoanError"/>
+				<xs:element ref="ous:renewLoanStatus" maxOccurs="unbounded"/>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
@@ -62,11 +66,13 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element ref="ous:agencyId"/>
+				<xs:element ref="ous:callback" minOccurs="0"/>
+				<xs:element ref="ous:cancelOrder" maxOccurs="unbounded"/>
+				<xs:element ref="ous:outputType" minOccurs="0"/>
 				<xs:element ref="ous:serviceRequester"/>
 				<xs:element ref="ous:userId"/>
 				<xs:element ref="ous:userPincode" minOccurs="0"/>
-				<xs:element ref="ous:agencyId"/>
-				<xs:element ref="ous:cancelOrder" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -76,8 +82,8 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:choice>
-				<xs:element ref="ous:cancelOrderStatus" maxOccurs="unbounded"/>
 				<xs:element ref="ous:cancelOrderError"/>
+				<xs:element ref="ous:cancelOrderStatus" maxOccurs="unbounded"/>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
@@ -87,11 +93,11 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="ous:loanId"/>
 				<xs:group ref="ous:bibliographicInfo"/>
 				<xs:element ref="ous:dateDue"/>
-				<xs:element ref="ous:reminderLevel" minOccurs="0"/>
+				<xs:element ref="ous:loanId"/>
 				<xs:element ref="ous:loanRecallDate" minOccurs="0"/>
+				<xs:element ref="ous:reminderLevel" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -101,10 +107,10 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="ous:orderId"/>
 				<xs:group ref="ous:bibliographicInfo"/>
-				<xs:element ref="ous:orderStatus"/>
 				<xs:element ref="ous:orderDate"/>
+				<xs:element ref="ous:orderId"/>
+				<xs:element ref="ous:orderStatus"/>
 				<xs:element ref="ous:orderType"/>
 				<xs:choice>
 					<xs:sequence>
@@ -128,8 +134,8 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="ous:loansCount" minOccurs="0"/>
 				<xs:element ref="ous:loan" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="ous:loansCount" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -138,9 +144,9 @@
 			<xs:documentation>Orders and order counts</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ous:ordersCount" minOccurs="0"/>
+			<xs:sequence>				
 				<xs:element ref="ous:order" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="ous:ordersCount" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -213,6 +219,11 @@
 	<xs:element name="agencyId" type="xs:string">
 		<xs:annotation>
 			<xs:documentation>Identifier of user's library</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="callback" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="eng">If outputType=json.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="dateAvailable" type="xs:dateTime">
@@ -288,6 +299,11 @@
 	<xs:element name="ordersCount" type="xs:integer">
 		<xs:annotation>
 			<xs:documentation>Number of user's orders</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="outputType" type="ous:outputTypeType">
+		<xs:annotation>
+			<xs:documentation xml:lang="eng">E.g. xml, json or php.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="pickupDate" type="xs:dateTime">
@@ -377,6 +393,7 @@
 	<xs:simpleType name="renewLoanErrorType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Service unavailable"/>
+			<xs:enumeration value="Element rule violated"/>
 			<xs:enumeration value="Unknown user"/>
 			<xs:enumeration value="User authentification failed"/>
 			<xs:enumeration value="User blocked"/>
@@ -404,6 +421,16 @@
 			<xs:enumeration value="in process"/>
 			<xs:enumeration value="available for pickup"/>
 			<xs:enumeration value="expired"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="outputTypeType">
+		<xs:annotation>
+			<xs:documentation xml:lang="eng">The types of output that can be returned by the service.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="xml"/>
+			<xs:enumeration value="json"/>
+			<xs:enumeration value="php"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>
