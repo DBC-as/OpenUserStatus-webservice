@@ -11,6 +11,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="ous:agencyId"/>
+				<xs:element ref="ous:authentication" minOccurs="0"/>
 				<xs:element ref="ous:callback" minOccurs="0"/>
 				<xs:element ref="ous:outputType" minOccurs="0"/>
 				<xs:element ref="ous:serviceRequester"/>
@@ -40,6 +41,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="ous:agencyId"/>
+				<xs:element ref="ous:authentication" minOccurs="0"/>
 				<xs:element ref="ous:callback" minOccurs="0"/>
 				<xs:element ref="ous:loanId" maxOccurs="unbounded"/>
 				<xs:element ref="ous:outputType" minOccurs="0"/>
@@ -67,6 +69,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="ous:agencyId"/>
+				<xs:element ref="ous:authentication" minOccurs="0"/>
 				<xs:element ref="ous:callback" minOccurs="0"/>
 				<xs:element ref="ous:cancelOrder" maxOccurs="unbounded"/>
 				<xs:element ref="ous:outputType" minOccurs="0"/>
@@ -221,6 +224,18 @@
 			<xs:documentation xml:lang="en">Identifier of user's library</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	<xs:element name="authentication">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Parameters used for authentication purposes</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:groupIdAut"/>
+				<xs:element ref="ous:passwordAut"/>
+				<xs:element ref="ous:userIdAut"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="callback" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">If outputType=json.</xs:documentation>
@@ -239,6 +254,11 @@
 	<xs:element name="dateOfExpectedReply" type="xs:dateTime">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Expected date of reply whether a loan can be renewed</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="groupIdAut">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Identifier of the group (most often a library number) the user belongs to (for authentication purposes)</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="holdQueuePosition" type="xs:integer">
@@ -306,6 +326,11 @@
 			<xs:documentation xml:lang="en">E.g. xml, json or php.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	<xs:element name="passwordAut">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Password (for authentication purposes)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:element name="pickupDate" type="xs:dateTime">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Date from which an order can be picked up</xs:documentation>
@@ -329,6 +354,11 @@
 	<xs:element name="userId" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Identifier of user in local library system</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="userIdAut">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">User identifier (for authentication purposes)</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="userPincode" type="xs:integer">
