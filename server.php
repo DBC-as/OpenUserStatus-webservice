@@ -107,8 +107,8 @@ class openUserStatus extends webServiceServer {
   *
   */
   function renewLoan($param) {
-    if (!isset($param->serviceRequester)) return $this->_build_error("renewLoan", "Element rule violated");
-    $servicerRequester = $param->serviceRequester->_value;
+//    if (!isset($param->serviceRequester)) return $this->_build_error("renewLoan", "Element rule violated");
+//    $servicerRequester = $param->serviceRequester->_value;
     if (!isset($param->userId)) return $this->_build_error("renewLoan", "Element rule violated");
     $userId = $param->userId->_value;
     $userPincode = $param->userPincode->_value;
@@ -166,8 +166,8 @@ class openUserStatus extends webServiceServer {
   *
   */
   function cancelOrder($param) {
-    if (!isset($param->serviceRequester)) return $this->_build_error("cancelOrder", "Element rule violated");
-    $servicerRequester = $param->serviceRequester->_value;
+//    if (!isset($param->serviceRequester)) return $this->_build_error("cancelOrder", "Element rule violated");
+//    $servicerRequester = $param->serviceRequester->_value;
     if (!isset($param->userId)) return $this->_build_error("cancelOrder", "Element rule violated");
     $userId = $param->userId->_value;
     $userPincode = $param->userPincode->_value;
@@ -277,8 +277,8 @@ class openUserStatus extends webServiceServer {
   * - - - - reminderLevel
   */
   function getUserStatus($param) {
-    if (!isset($param->serviceRequester)) return $this->_build_error("getUserStatus", "Element rule violated");
-    $servicerRequester = $param->serviceRequester->_value;
+//    if (!isset($param->serviceRequester)) return $this->_build_error("getUserStatus", "Element rule violated");
+//    $servicerRequester = $param->serviceRequester->_value;
     if (!isset($param->userId)) return $this->_build_error("getUserStatus", "Element rule violated");
     $userId = $param->userId->_value;
     $userPincode = $param->userPincode->_value;
