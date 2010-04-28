@@ -258,7 +258,7 @@
 			<xs:documentation xml:lang="en">Identifier of the group (most often a library number) the user belongs to (for authentication purposes)</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="holdQueuePosition" type="xs:integer">
+	<xs:element name="holdQueuePosition" type="xs:positiveInteger">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">An order's position in the queue</xs:documentation>
 		</xs:annotation>
@@ -308,7 +308,7 @@
 			<xs:documentation xml:lang="en">State of a given order (in process, ready for pickup or expired)</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="orderType" type="xs:string">
+	<xs:element name="orderType" type="ous:orderTypeType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Type of order returned from getUserStatus and used in cancelOrderRequest</xs:documentation>
 		</xs:annotation>
@@ -405,6 +405,7 @@
 	</xs:group>
 	<xs:simpleType name="getUserStatusErrorType">
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="authentication_error"/>
 			<xs:enumeration value="Service unavailable"/>
 			<xs:enumeration value="Element rule violated"/>
 			<xs:enumeration value="Unknown user"/>
@@ -414,6 +415,7 @@
 	</xs:simpleType>
 	<xs:simpleType name="renewLoanErrorType">
 		<xs:restriction base="xs:string">
+		    <xs:enumeration value="authentication_error"/>
 			<xs:enumeration value="Service unavailable"/>
 			<xs:enumeration value="Element rule violated"/>
 			<xs:enumeration value="Unknown user"/>
@@ -429,6 +431,7 @@
 	</xs:simpleType>
 	<xs:simpleType name="cancelOrderErrorType">
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="authentication_error"/>
 			<xs:enumeration value="Service unavailable"/>
 			<xs:enumeration value="Element rule violated"/>
 			<xs:enumeration value="Unknown user"/>
@@ -443,6 +446,15 @@
 			<xs:enumeration value="in process"/>
 			<xs:enumeration value="available for pickup"/>
 			<xs:enumeration value="expired"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="orderTypeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Estimate"/>
+			<xs:enumeration value="Hold"/>
+			<xs:enumeration value="Loan"/>
+			<xs:enumeration value="Non-returnable Copy"/>
+			<xs:enumeration value="Stack Retrieval"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="outputTypeType">
