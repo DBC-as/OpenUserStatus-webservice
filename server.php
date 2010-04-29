@@ -193,7 +193,7 @@ class openUserStatus extends webServiceServer {
                                             "FromAgencyId" => "DK-190101",
                                             "FromAgencyAuthentication" => $fav_info["ncip_cancel_password"],
                                             "ToAgencyId" => $agencyId,
-                                            "UniqueUserId" => array("UserIdentifierValue" => $user_id, "UniqueAgencyId" => $agencyId),
+                                            "UniqueUserId" => array("UserIdentifierValue" => $userId, "UniqueAgencyId" => $agencyId),
                                             "UniqueRequestId" => array("RequestIdentifierValue" => $cancelOrder["orderId"], "UniqueAgencyId" => $agencyId),
                                             "RequestType" => $cancelOrder["orderType"] ) );
       unset($orderStatus);
