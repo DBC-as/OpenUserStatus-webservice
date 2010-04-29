@@ -46,6 +46,9 @@ logfile = /tmp/openuserstatus.log
 ;   OCI     - oracle
 verbose = WARNING+ERROR+FATAL+STAT+TIMER+TRACE+DEBUG+Z3950+OCI
 
+; format for automatic timer dump %s is the soap-action used
+dump_timer = openuserstatus(%s)
+
 ; default output format
 default_output_type=xml
 
