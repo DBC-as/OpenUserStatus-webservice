@@ -1,13 +1,16 @@
 ; ini-file for openuserstatus
 
 [setup]
-; servicename
-version = 0.4
-
+version = 0.2
 
 ; wsdl for service
 wsdl = openuserstatus.wsdl
 
+; in_house_domain may use ?ShowInfo and use create_sample form
+;in_house_domain = .dbc.dk
+
+; set to TRUE to expose the create_sample form
+;show_samples = 1
 
 ; soapActions and their corresponding request structure
 soapAction[getUserStatus] = getUserStatusRequest
@@ -15,17 +18,18 @@ soapAction[renewLoan] = renewLoanRequest
 soapAction[cancelOrder] = cancelOrderRequest
 
 ; validate
+;validate[soap_request] = soap.xsd
 ;validate[request] = openuserstatus.xsd
 ;validate[response] = openuserstatus.xsd
 
 ; prefixes and namespaces
-; Namespace NONE = default name space
-xmlns[NONE] = http://oss.dbc.dk/ns/openuserstatus
+xmlns[] = http://oss.dbc.dk/ns/openuserstatus
 
+; path to xml-examples
 xmldir = ./xml
 
 ; oci credentials for VIP-base
-oci_credentials = oci_user/oci_password@oci_machine.dk
+oci_credentials = user/password@myoracle.server.dk
 
 ; logfile for verbose output
 logfile = /tmp/openuserstatus.log
@@ -43,7 +47,30 @@ logfile = /tmp/openuserstatus.log
 verbose = WARNING+ERROR+FATAL+STAT+TIMER+TRACE+DEBUG+Z3950+OCI
 
 ; default output format
-; default_output_type=xml
+default_output_type=xml
+
+
+[aaa]
+; aaa Authentication, Access control and Accounting
+; if aaa_credentials is set, the rights-object is created from
+; the FORS-server or aaa_ip_rights below
+;
+; oci credentials for FORS server
+;aaa_credentials = some_user/some_pwd@some.server.dbc.dk
+;
+; memcache server - use localhost in one-webserver environment
+;aaa_cache_address = localhost:11211
+;
+; number of seconds to cache authentication and access rights info
+;aaa_cache_seconds = 3600
+;
+; As an alternative to FORS rights, rights can be set here for selected ip-addresses
+; aaa_ip_rights[group-identifier][ip_list] = list of ip's
+; aaa_ip_rights[group-identifier][ressource][<named ressource>] = right to <named ressource>
+; aaa_ip_rights[group-identifier][ressource][<named ressource 2>] = right to <named ressource 2>
+;
+;aaa_ip_rights[dbc][ip_list] = 172.16.0.0-172.31.255.255;193.111.162.0-193.111.162.255
+;aaa_ip_rights[dbc][ressource][opennumberroll] = 500
 
 
 [rest]
@@ -63,27 +90,27 @@ verbose = WARNING+ERROR+FATAL+STAT+TIMER+TRACE+DEBUG+Z3950+OCI
 ; </thisSoapAction>
 ; from url: action=thisSoapAction&some.number=nn&another.number=mm
 ;
-;
-; action[ALL] defines parameter used in all defined soap-actions
-;
-action[ALL][] = outputType
-action[ALL][] = callback
 
 action[getUserStatus][] = userId
 action[getUserStatus][] = userPincode
 action[getUserStatus][] = agencyId
+action[getUserStatus][] = outputType
+action[getUserStatus][] = callback
 
 action[renewLoan][] = userId
 action[renewLoan][] = userPincode
 action[renewLoan][] = agencyId
 action[renewLoan][] = loanId
+action[renewLoan][] = outputType
+action[renewLoan][] = callback
 
 action[cancelOrder][] = userId
 action[cancelOrder][] = userPincode
 action[cancelOrder][] = agencyId
 action[cancelOrder][] = loanId
+action[cancelOrder][] = outputType
+action[cancelOrder][] = callback
 
 
 [HowRU]
-
 
