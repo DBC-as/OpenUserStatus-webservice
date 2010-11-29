@@ -1,151 +1,129 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2010 (http://www.altova.com) by Dansk Bibliotekscenter A/S (Dansk Bibliotekscenter A/S) -->
+<!-- edited with XMLSpy v2010 rel. 3 (http://www.altova.com) by Dansk Bibliotekscenter A/S (Dansk Bibliotekscenter A/S) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ous="http://oss.dbc.dk/ns/openuserstatus" targetNamespace="http://oss.dbc.dk/ns/openuserstatus" elementFormDefault="qualified">
 	<xs:annotation>
 		<xs:documentation xml:lang="en">This XML schema describes the structure and data of the Open User Status webservice</xs:documentation>
 	</xs:annotation>
-
-
-<!-- pjo -->
-<xs:element name="getUserRequest">
-  <xs:annotation>
-    <xs:documentation xml:lang="en">The service request for lookup_user</xs:documentation>
-  </xs:annotation>
-  <xs:complexType>
-    <xs:sequence>
-      <xs:element ref="ous:agencyId"/>
-      <xs:element ref="ous:authentication" minOccurs="0"/>
-      <xs:element ref="ous:callback" minOccurs="0"/>
-      <xs:element ref="ous:outputType" minOccurs="0"/>
-      <xs:element ref="ous:userId"/>
-      <xs:element ref="ous:userPincode" minOccurs="0"/>
-    </xs:sequence>
-  </xs:complexType>
-</xs:element>
-
-<xs:element name="getUserResponse">
-  <xs:complexType>
-    <xs:sequence>
-      <xs:element ref="ous:userId"/>
-      <xs:element ref="ous:loansCount"/>
-      <xs:element ref="ous:basicLoan" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element ref="ous:ordersCount"/>
-      <xs:element ref="ous:basicOrder" minOccurs="0" maxOccurs="unbounded"/>
-    </xs:sequence>
-  </xs:complexType>
-</xs:element>
-
-<xs:element name="getUserOrderRequest">
-  <xs:annotation>
-    <xs:documentation xml:lang="en">The service request for order details</xs:documentation>
-  </xs:annotation>
-  <xs:complexType>
-    <xs:sequence>
-      <xs:element ref="ous:agencyId"/>
-      <xs:element ref="ous:authentication" minOccurs="0"/>
-      <xs:element ref="ous:callback" minOccurs="0"/>
-      <xs:element ref="ous:orderId"/>
-      <xs:element ref="ous:outputType" minOccurs="0"/>
-      <xs:element ref="ous:userId"/>
-      <xs:element ref="ous:userPincode" minOccurs="0"/>
-    </xs:sequence>
-  </xs:complexType>
-</xs:element>
-
-<xs:element name="getUserLoanRequest">
-<xs:annotation>
-    <xs:documentation xml:lang="en">The service request for loan details</xs:documentation>
-  </xs:annotation>
-  <xs:complexType>
-    <xs:sequence>
-      <xs:element ref="ous:agencyId"/>
-      <xs:element ref="ous:authentication" minOccurs="0"/>
-      <xs:element ref="ous:callback" minOccurs="0"/>
-      <xs:element ref="ous:loanId"/>
-      <xs:element ref="ous:outputType" minOccurs="0"/>
-      <xs:element ref="ous:userId"/>
-      <xs:element ref="ous:userPincode" minOccurs="0"/>
-    </xs:sequence>
-  </xs:complexType>
-</xs:element>
-
-
-<xs:element name="getUserOrderResponse">
-  <xs:annotation>
-    <xs:documentation xml:lang="en">The service response for Order details</xs:documentation>
-  </xs:annotation>
-  <xs:complexType>
-    <xs:sequence>
-      <xs:choice>
-	<xs:element ref="ous:agencyId"/>
-	<xs:element ref="ous:orderId"/>
-	<xs:group ref="ous:bibliographicInfo"/>
-      </xs:choice>
-    </xs:sequence>
-  </xs:complexType>
-</xs:element>
-
-
-<xs:element name="getUserLoanResponse">
- <xs:annotation>
-    <xs:documentation xml:lang="en">The service response for loan details</xs:documentation>
-  </xs:annotation>
-  <xs:complexType>
-    <xs:sequence>
-      <xs:choice>
-	<xs:element ref="ous:agencyId"/>
-	<xs:element ref="ous:loanId"/>
-	<xs:group ref="ous:bibliographicInfo"/>
-      </xs:choice>
-    </xs:sequence>
-  </xs:complexType>
-</xs:element>
-
-<!-- pjo TODO change element loan to ref basicLoan -->
-<xs:element name="basicLoan">
-  <xs:annotation>
-    <xs:documentation xml:lang="en">basic loan with no bibliographic data</xs:documentation>
-  </xs:annotation>
-  <xs:complexType>
-    <xs:sequence>
-      <xs:element ref="ous:dateDue"/>
-      <xs:element ref="ous:loanId"/>
-      <xs:element ref="ous:loanRecallDate" minOccurs="0"/>
-      <xs:element ref="ous:reminderLevel" minOccurs="0"/>
-    </xs:sequence>
-  </xs:complexType>
-</xs:element>
-
-<!-- pjo TODO change element order to ref basicOrder -->
-<xs:element name="basicOrder">
-  <xs:annotation>
-    <xs:documentation xml:lang="en">Details about an order</xs:documentation>
-  </xs:annotation>
-  <xs:complexType>
-    <xs:sequence>
-      <xs:element ref="ous:orderDate"/>
-      <xs:element ref="ous:orderId"/>
-      <xs:element ref="ous:orderStatus"/>
-      <xs:element ref="ous:orderType"/>
-      <xs:choice>
-	<xs:sequence>
-	  <xs:element ref="ous:dateAvailable" minOccurs="0"/>
-	  <xs:element ref="ous:holdQueuePosition"/>
-	  <xs:element ref="ous:needBeforeDate" minOccurs="0"/>
-	  <xs:element ref="ous:orderExpiryDate" minOccurs="0"/>
-	</xs:sequence>
-	<xs:sequence>
-	  <xs:element ref="ous:pickupDate" minOccurs="0"/>
-	  <xs:element ref="ous:pickupExpiryDate" minOccurs="0"/>
-	  <xs:element ref="ous:reminderLevel" minOccurs="0"/>
-	</xs:sequence>
-      </xs:choice>
-    </xs:sequence>
-</xs:complexType>
-</xs:element>
-
-<!-- end pjo -->
-
+	<!-- pjo -->
+	<xs:element name="getUserRequest">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The service request for lookup_user</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:agencyId"/>
+				<xs:element ref="ous:authentication" minOccurs="0"/>
+				<xs:element ref="ous:callback" minOccurs="0"/>
+				<xs:element ref="ous:outputType" minOccurs="0"/>
+				<xs:element ref="ous:userId"/>
+				<xs:element ref="ous:userPincode" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="getUserResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:userId"/>
+				<xs:element ref="ous:loansCount"/>
+				<xs:element ref="ous:loanInfo" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="ous:ordersCount"/>
+				<xs:element ref="ous:orderInfo" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="getUserLoanRequest">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The service request for loan details</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:agencyId"/>
+				<xs:element ref="ous:authentication" minOccurs="0"/>
+				<xs:element ref="ous:callback" minOccurs="0"/>
+				<xs:element ref="ous:loanId"/>
+				<xs:element ref="ous:outputType" minOccurs="0"/>
+				<xs:element ref="ous:userId"/>
+				<xs:element ref="ous:userPincode" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="getUserLoanResponse">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The service response for loan details</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:choice>
+					<xs:element ref="ous:agencyId"/>
+					<xs:element ref="ous:loanId"/>
+					<xs:group ref="ous:bibliographicInfo"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="getUserOrderRequest">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The service request for order details</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:agencyId"/>
+				<xs:element ref="ous:authentication" minOccurs="0"/>
+				<xs:element ref="ous:callback" minOccurs="0"/>
+				<xs:element ref="ous:orderId"/>
+				<xs:element ref="ous:outputType" minOccurs="0"/>
+				<xs:element ref="ous:userId"/>
+				<xs:element ref="ous:userPincode" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="getUserOrderResponse">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The service response for Order details</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:choice>
+					<xs:element ref="ous:agencyId"/>
+					<xs:element ref="ous:orderId"/>
+					<xs:group ref="ous:bibliographicInfo"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- pjo TODO change element loan to ref basicLoan -->
+	<xs:element name="loanInfo">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">basic loan with no bibliographic data</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:dateDue"/>
+				<xs:element ref="ous:loanId"/>
+				<xs:element ref="ous:loanRecallDate" minOccurs="0"/>
+				<xs:element ref="ous:reminderLevel" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- pjo TODO change element order to ref basicOrder -->
+	<xs:element name="orderInfo">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">basic order with no bibliographic data</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:orderDate"/>
+				<xs:element ref="ous:orderId"/>
+				<xs:element ref="ous:orderStatus"/>
+				<xs:element ref="ous:orderType"/>
+				<xs:choice>
+					<xs:element ref="ous:orderNotReadyInfo"/>
+					<xs:element ref="ous:orderReadyInfo"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- end pjo -->
 	<xs:element name="getUserStatusRequest">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">The service request for user's loans and orders</xs:documentation>
@@ -236,10 +214,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:group ref="ous:bibliographicInfo"/>
-				<xs:element ref="ous:dateDue"/>
-				<xs:element ref="ous:loanId"/>
-				<xs:element ref="ous:loanRecallDate" minOccurs="0"/>
-				<xs:element ref="ous:reminderLevel" minOccurs="0"/>
+				<xs:element ref="ous:loanInfo"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -250,23 +225,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:group ref="ous:bibliographicInfo"/>
-				<xs:element ref="ous:orderDate"/>
-				<xs:element ref="ous:orderId"/>
-				<xs:element ref="ous:orderStatus"/>
-				<xs:element ref="ous:orderType"/>
-				<xs:choice>
-					<xs:sequence>
-						<xs:element ref="ous:dateAvailable" minOccurs="0"/>
-						<xs:element ref="ous:holdQueuePosition"/>
-						<xs:element ref="ous:needBeforeDate" minOccurs="0"/>
-						<xs:element ref="ous:orderExpiryDate" minOccurs="0"/>
-					</xs:sequence>
-					<xs:sequence>
-						<xs:element ref="ous:pickupDate" minOccurs="0"/>
-						<xs:element ref="ous:pickupExpiryDate" minOccurs="0"/>
-						<xs:element ref="ous:reminderLevel" minOccurs="0"/>
-					</xs:sequence>
-				</xs:choice>
+				<xs:element ref="ous:orderInfo"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -444,6 +403,31 @@
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Date on which an order expires</xs:documentation>
 		</xs:annotation>
+	</xs:element>
+	<xs:element name="orderNotReadyInfo">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Info about orders that are not yet ready for pickup</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:dateAvailable" minOccurs="0"/>
+				<xs:element ref="ous:holdQueuePosition" minOccurs="0"/>
+				<xs:element ref="ous:needBeforeDate" minOccurs="0"/>
+				<xs:element ref="ous:orderExpiryDate" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="orderReadyInfo">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Info about orders that are ready for pickup</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:pickupDate" minOccurs="0"/>
+				<xs:element ref="ous:pickupExpiryDate" minOccurs="0"/>
+				<xs:element ref="ous:reminderLevel" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
 	</xs:element>
 	<xs:element name="orderStatus" type="ous:orderStatusType">
 		<xs:annotation>
