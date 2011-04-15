@@ -4,126 +4,6 @@
 	<xs:annotation>
 		<xs:documentation xml:lang="en">This XML schema describes the structure and data of the Open User Status webservice</xs:documentation>
 	</xs:annotation>
-	<!-- pjo -->
-	<xs:element name="getUserRequest">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">The service request for lookup_user</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ous:agencyId"/>
-				<xs:element ref="ous:authentication" minOccurs="0"/>
-				<xs:element ref="ous:callback" minOccurs="0"/>
-				<xs:element ref="ous:outputType" minOccurs="0"/>
-				<xs:element ref="ous:userId"/>
-				<xs:element ref="ous:userPincode" minOccurs="0"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="getUserResponse">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ous:userId"/>
-				<xs:element ref="ous:loansCount"/>
-				<xs:element ref="ous:loanInfo" minOccurs="0" maxOccurs="unbounded"/>
-				<xs:element ref="ous:ordersCount"/>
-				<xs:element ref="ous:orderInfo" minOccurs="0" maxOccurs="unbounded"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="getUserLoanRequest">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">The service request for loan details</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ous:agencyId"/>
-				<xs:element ref="ous:authentication" minOccurs="0"/>
-				<xs:element ref="ous:callback" minOccurs="0"/>
-				<xs:element ref="ous:loanId"/>
-				<xs:element ref="ous:outputType" minOccurs="0"/>
-				<xs:element ref="ous:userId"/>
-				<xs:element ref="ous:userPincode" minOccurs="0"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="getUserLoanResponse">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">The service response for loan details</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:choice>
-					<xs:element ref="ous:agencyId"/>
-					<xs:element ref="ous:loanId"/>
-					<xs:group ref="ous:bibliographicInfo"/>
-				</xs:choice>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="getUserOrderRequest">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">The service request for order details</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ous:agencyId"/>
-				<xs:element ref="ous:authentication" minOccurs="0"/>
-				<xs:element ref="ous:callback" minOccurs="0"/>
-				<xs:element ref="ous:orderId"/>
-				<xs:element ref="ous:outputType" minOccurs="0"/>
-				<xs:element ref="ous:userId"/>
-				<xs:element ref="ous:userPincode" minOccurs="0"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="getUserOrderResponse">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">The service response for Order details</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:choice>
-					<xs:element ref="ous:agencyId"/>
-					<xs:element ref="ous:orderId"/>
-					<xs:group ref="ous:bibliographicInfo"/>
-				</xs:choice>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<!-- pjo TODO change element loan to ref basicLoan -->
-	<xs:element name="loanInfo">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">basic loan with no bibliographic data</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ous:dateDue"/>
-				<xs:element ref="ous:loanId"/>
-				<xs:element ref="ous:loanRecallDate" minOccurs="0"/>
-				<xs:element ref="ous:reminderLevel" minOccurs="0"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<!-- pjo TODO change element order to ref basicOrder -->
-	<xs:element name="orderInfo">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">basic order with no bibliographic data</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ous:orderDate"/>
-				<xs:element ref="ous:orderId"/>
-				<xs:element ref="ous:orderStatus"/>
-				<xs:element ref="ous:orderType"/>
-				<xs:choice>
-					<xs:element ref="ous:orderNotReadyInfo"/>
-					<xs:element ref="ous:orderReadyInfo"/>
-				</xs:choice>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<!-- end pjo -->
 	<xs:element name="getUserStatusRequest">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">The service request for user's loans and orders</xs:documentation>
@@ -207,6 +87,33 @@
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="updateOrderRequest">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The service request for cancellation of one or more orders</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:agencyId"/>
+				<xs:element ref="ous:authentication" minOccurs="0"/>
+				<xs:element ref="ous:callback" minOccurs="0"/>
+				<xs:element ref="ous:updateOrder" maxOccurs="unbounded"/>
+				<xs:element ref="ous:outputType" minOccurs="0"/>
+				<xs:element ref="ous:userId"/>
+				<xs:element ref="ous:userPincode" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="updateOrderResponse">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The service response returning a confirmation of cancellation or an error</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="ous:updateOrderError"/>
+				<xs:element ref="ous:updateOrderStatus" maxOccurs="unbounded"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="loan">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Details about a loan</xs:documentation>
@@ -214,7 +121,11 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:group ref="ous:bibliographicInfo"/>
-				<xs:element ref="ous:loanInfo"/>
+				<xs:element ref="ous:dateDue"/>
+				<xs:element ref="ous:loanId"/>
+				<xs:element ref="ous:loanRecallDate" minOccurs="0"/>
+				<xs:element ref="ous:reminderLevel" minOccurs="0"/>
+				<xs:element ref="ous:userFiscalAccount" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -225,7 +136,25 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:group ref="ous:bibliographicInfo"/>
-				<xs:element ref="ous:orderInfo"/>
+				<xs:element ref="ous:orderDate"/>
+				<xs:element ref="ous:orderId"/>
+				<xs:element ref="ous:orderStatus"/>
+				<xs:element ref="ous:orderType"/>
+				<xs:choice>
+					<xs:sequence>
+						<xs:element ref="ous:dateAvailable" minOccurs="0"/>
+						<xs:element ref="ous:holdQueuePosition"/>
+						<xs:element ref="ous:needBeforeDate" minOccurs="0"/>
+						<xs:element ref="ous:orderExpiryDate" minOccurs="0"/>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element ref="ous:pickupDate" minOccurs="0"/>
+						<xs:element ref="ous:pickupExpiryDate" minOccurs="0"/>
+						<xs:element ref="ous:pickupNumber" minOccurs="0"/>
+						<xs:element ref="ous:pickupPlace" minOccurs="0"/>
+						<xs:element ref="ous:reminderLevel" minOccurs="0"/>
+					</xs:sequence>
+				</xs:choice>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -317,6 +246,11 @@
 			<xs:documentation xml:lang="en">Messages returned by the service if an order cannot be cancelled</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	<xs:element name="updateOrderError" type="ous:cancelOrderErrorType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Messages returned by the service if an order cannot be cancelled</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:element name="agencyId" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Identifier of user's library</xs:documentation>
@@ -333,6 +267,11 @@
 				<xs:element ref="ous:userIdAut"/>
 			</xs:sequence>
 		</xs:complexType>
+	</xs:element>
+	<xs:element name="currency" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Currency used in fiscal account.</xs:documentation>
+		</xs:annotation>
 	</xs:element>
 	<xs:element name="callback" type="xs:string">
 		<xs:annotation>
@@ -384,6 +323,11 @@
 			<xs:documentation xml:lang="en">User's last day of interest in an ordered item</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	<xs:element name="newPickupPlace" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The place where the material is to be picked up</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:element name="orderCancelled" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Parameter that confirms that a given order has been cancelled</xs:documentation>
@@ -404,31 +348,6 @@
 			<xs:documentation xml:lang="en">Date on which an order expires</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="orderNotReadyInfo">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Info about orders that are not yet ready for pickup</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ous:dateAvailable" minOccurs="0"/>
-				<xs:element ref="ous:holdQueuePosition" minOccurs="0"/>
-				<xs:element ref="ous:needBeforeDate" minOccurs="0"/>
-				<xs:element ref="ous:orderExpiryDate" minOccurs="0"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="orderReadyInfo">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Info about orders that are ready for pickup</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ous:pickupDate" minOccurs="0"/>
-				<xs:element ref="ous:pickupExpiryDate" minOccurs="0"/>
-				<xs:element ref="ous:reminderLevel" minOccurs="0"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
 	<xs:element name="orderStatus" type="ous:orderStatusType">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">State of a given order (in process, ready for pickup or expired)</xs:documentation>
@@ -442,6 +361,11 @@
 	<xs:element name="ordersCount" type="xs:integer">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Number of user's orders</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="orderUpdated" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Parameter that confirms that a given order has been updated</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="outputType" type="ous:outputTypeType">
@@ -464,10 +388,57 @@
 			<xs:documentation xml:lang="en">Last date an order can be picked up</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	<xs:element name="pickupNumber" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Pickup number of the material at the pickup place</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="pickupPlace" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The place where the material is to be picked up</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:element name="reminderLevel" type="xs:integer">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">The number of times a reminder for a given item (loan or order) has been sent</xs:documentation>
 		</xs:annotation>
+	</xs:element>
+	<xs:element name="updateOrder">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Parameters for an order to be updated</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:orderId"/>
+				<xs:element ref="ous:pickupPlace"/>
+				<xs:element ref="ous:newPickupPlace"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="updateOrderStatus">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Details about a updated order</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:orderId"/>
+				<xs:choice>
+					<xs:element ref="ous:orderUpdated"/>
+					<xs:element ref="ous:updateOrderError"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="userFiscalAccount">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Details about amount owed by the user with regards to a specific loan</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:currency"/>
+				<xs:element ref="ous:value"/>
+			</xs:sequence>
+		</xs:complexType>
 	</xs:element>
 	<xs:element name="userId" type="xs:string">
 		<xs:annotation>
@@ -482,6 +453,11 @@
 	<xs:element name="userPincode" type="xs:integer">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">User's pincode in local library system</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="value" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Amount owed by the user.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="author" type="xs:string"/>
@@ -556,6 +532,18 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="cancelOrderErrorType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="authentication_error"/>
+			<xs:enumeration value="Service unavailable"/>
+			<xs:enumeration value="Element rule violated"/>
+			<xs:enumeration value="Unknown user"/>
+			<xs:enumeration value="User access denied"/>
+			<xs:enumeration value="User authentification failed"/>
+			<xs:enumeration value="Unknown order"/>
+			<xs:enumeration value="Request already processed"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="updateOrderErrorType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="authentication_error"/>
 			<xs:enumeration value="Service unavailable"/>

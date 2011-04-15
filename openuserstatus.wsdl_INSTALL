@@ -23,6 +23,12 @@
 	<wsdl:message name="cancelOrderResponse">
 		<wsdl:part name="body" element="ous:cancelOrderResponse"/>
 	</wsdl:message>
+	<wsdl:message name="updateOrderRequest">
+		<wsdl:part name="body" element="ous:updateOrderRequest"/>
+	</wsdl:message>
+	<wsdl:message name="updateOrderResponse">
+		<wsdl:part name="body" element="ous:updateOrderResponse"/>
+	</wsdl:message>
 	<wsdl:portType name="getUserStatusPortType">
 		<wsdl:operation name="getUserStatus">
 			<wsdl:input message="ousw:getUserStatusRequest"/>
@@ -39,6 +45,12 @@
 		<wsdl:operation name="cancelOrder">
 			<wsdl:input message="ousw:cancelOrderRequest"/>
 			<wsdl:output message="ousw:cancelOrderResponse"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:portType name="updateOrderPortType">
+		<wsdl:operation name="updateOrder">
+			<wsdl:input message="ousw:updateOrderRequest"/>
+			<wsdl:output message="ousw:updateOrderResponse"/>
 		</wsdl:operation>
 	</wsdl:portType>
 	<wsdl:binding name="getUserStatusSoapBinding" type="ousw:getUserStatusPortType">
@@ -77,6 +89,18 @@
 			</wsdl:output>
 		</wsdl:operation>
 	</wsdl:binding>
+	<wsdl:binding name="updateOrderSoapBinding" type="ousw:updateOrderPortType">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="updateOrder">
+			<soap:operation soapAction="cancelOrder"/>
+			<wsdl:input name="updateOrderRequest">
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="updateOrderResponse">
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
 	<wsdl:service name="openUserStatusService">
 		<wsdl:port name="getUserStatusPortType" binding="ousw:getUserStatusSoapBinding">
 			<soap:address location="http://didicas.dbc.dk/openuserstatus"/>
@@ -85,6 +109,9 @@
 			<soap:address location="http://didicas.dbc.dk/openuserstatus"/>
 		</wsdl:port>
 		<wsdl:port name="cancelOrderPortType" binding="ousw:cancelOrderSoapBinding">
+			<soap:address location="http://didicas.dbc.dk/openuserstatus"/>
+		</wsdl:port>
+		<wsdl:port name="updateOrderPortType" binding="ousw:updateOrderSoapBinding">
 			<soap:address location="http://didicas.dbc.dk/openuserstatus"/>
 		</wsdl:port>
 	</wsdl:service>
