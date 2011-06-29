@@ -150,8 +150,9 @@
 					<xs:sequence>
 						<xs:element ref="ous:pickupDate" minOccurs="0"/>
 						<xs:element ref="ous:pickupExpiryDate" minOccurs="0"/>
-						<xs:element ref="ous:pickupNumber" minOccurs="0"/>
-						<xs:element ref="ous:pickupPlace" minOccurs="0"/>
+						<xs:element ref="ous:pickUpId" minOccurs="0"/>
+						<xs:element ref="ous:pickUpAgency" minOccurs="0"/>
+						<xs:element ref="ous:pickUpAgencySubdivision" minOccurs="0"/>
 						<xs:element ref="ous:reminderLevel" minOccurs="0"/>
 					</xs:sequence>
 				</xs:choice>
@@ -323,11 +324,6 @@
 			<xs:documentation xml:lang="en">User's last day of interest in an ordered item</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="newPickupPlace" type="xs:string">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">The place where the material is to be picked up</xs:documentation>
-		</xs:annotation>
-	</xs:element>
 	<xs:element name="orderCancelled" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Parameter that confirms that a given order has been cancelled</xs:documentation>
@@ -388,14 +384,19 @@
 			<xs:documentation xml:lang="en">Last date an order can be picked up</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="pickupNumber" type="xs:string">
+	<xs:element name="pickUpId" type="xs:string">
 		<xs:annotation>
-			<xs:documentation xml:lang="en">Pickup number of the material at the pickup place</xs:documentation>
+			<xs:documentation xml:lang="en">Pick up id of the material at the pickUpAgency</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="pickupPlace" type="xs:string">
+	<xs:element name="pickUpAgency" type="xs:string">
 		<xs:annotation>
-			<xs:documentation xml:lang="en">The place where the material is to be picked up</xs:documentation>
+			<xs:documentation xml:lang="en">The agency where the material is to be picked up</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="pickUpAgencySubdivision" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Subdivison of the agency where the material is to be picked up</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="reminderLevel" type="xs:integer">
@@ -410,8 +411,8 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="ous:orderId"/>
-				<xs:element ref="ous:pickupPlace"/>
-				<xs:element ref="ous:newPickupPlace"/>
+				<xs:element ref="ous:pickUpAgency"/>
+				<xs:element ref="ous:pickUpAgencySubdivision" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
