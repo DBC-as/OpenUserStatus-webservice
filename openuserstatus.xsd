@@ -148,8 +148,8 @@
 						<xs:element ref="ous:orderExpiryDate" minOccurs="0"/>
 					</xs:sequence>
 					<xs:sequence>
-						<xs:element ref="ous:pickupDate" minOccurs="0"/>
-						<xs:element ref="ous:pickupExpiryDate" minOccurs="0"/>
+						<xs:element ref="ous:pickUpDate" minOccurs="0"/>
+						<xs:element ref="ous:pickUpExpiryDate" minOccurs="0"/>
 						<xs:element ref="ous:pickUpId" minOccurs="0"/>
 						<xs:element ref="ous:pickUpAgency" minOccurs="0"/>
 						<xs:element ref="ous:pickUpAgencySubdivision" minOccurs="0"/>
@@ -374,12 +374,12 @@
 			<xs:documentation xml:lang="en">Password (for authentication purposes)</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="pickupDate" type="xs:dateTime">
+	<xs:element name="pickUpDate" type="xs:dateTime">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Date from which an order can be picked up</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="pickupExpiryDate" type="xs:dateTime">
+	<xs:element name="pickUpExpiryDate" type="xs:dateTime">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Last date an order can be picked up</xs:documentation>
 		</xs:annotation>
