@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2010 rel. 3 (http://www.altova.com) by Dansk Bibliotekscenter A/S (Dansk Bibliotekscenter A/S) -->
+<!-- edited with XMLSpy v2011 (http://www.altova.com) by Dansk Bibliotekscenter A/S (Dansk Bibliotekscenter A/S) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ous="http://oss.dbc.dk/ns/openuserstatus" targetNamespace="http://oss.dbc.dk/ns/openuserstatus" elementFormDefault="qualified">
 	<xs:annotation>
 		<xs:documentation xml:lang="en">This XML schema describes the structure and data of the Open User Status webservice</xs:documentation>
@@ -114,6 +114,144 @@
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="agencyId" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Identifier of user's library</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="authentication">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Parameters used for authentication purposes</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:groupIdAut"/>
+				<xs:element ref="ous:passwordAut"/>
+				<xs:element ref="ous:userIdAut"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="author" type="xs:string"/>
+	<xs:element name="authorOfComponent" type="xs:string"/>
+	<xs:element name="bibliographicItemId" type="xs:string"/>
+	<xs:element name="bibliographicLevel" type="xs:string"/>
+	<xs:element name="bibliographicRecordId" type="xs:string"/>
+	<xs:element name="callback" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">If outputType=json.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="cancelOrder">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Parameters for an order to be cancelled</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:orderId"/>
+				<xs:element ref="ous:orderType"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="cancelOrderError" type="ous:cancelOrderErrorType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Messages returned by the service if an order cannot be cancelled</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="cancelOrderStatus">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Details about a cancelled order (via cancelOrderResponse - returning either orderCancelled or cancelOrderError for each orderId)</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:orderId"/>
+				<xs:choice>
+					<xs:element ref="ous:orderCancelled"/>
+					<xs:element ref="ous:cancelOrderError"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="componentId" type="xs:string"/>
+	<xs:element name="dateAvailable" type="xs:dateTime">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Expected date for ordered item to be available</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="dateDue" type="xs:dateTime">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Last return date for a loan</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="dateOfExpectedReply" type="xs:dateTime">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Expected date of reply whether a loan can be renewed</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="edition" type="xs:string"/>
+	<xs:element name="electronicDataFormatType" type="xs:string"/>
+	<xs:element name="fiscalAccount">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Details about fees, penalties etc. owed by the user</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:fiscalTransaction" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="ous:totalAmount" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="fiscalTransaction">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Details about each fee, penalty etc. owed by the user</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:fiscalTransactionAmount"/>
+				<xs:element ref="ous:fiscalTransactionCurrency"/>
+				<xs:element ref="ous:fiscalTransactionDate"/>
+				<xs:element ref="ous:fiscalTransactionType"/>
+				<xs:element ref="ous:bibliographicRecordId" minOccurs="0"/>
+				<xs:element ref="ous:author" minOccurs="0"/>
+				<xs:element ref="ous:title" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="fiscalTransactionAmount" type="xs:integer">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Amount of transaction</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="fiscalTransactionCurrency" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Currency used in fiscalTransactionAmount</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="fiscalTransactionDate" type="xs:dateTime">
+		<xs:annotation>
+			<xs:documentation>Date that fiscalTransaction is created in the system</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="fiscalTransactionType" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Type of payment (Fine, Book Replacement Charge etc.). Content corresponds to UserTranscationType in NCIP</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="getUserStatusError" type="ous:getUserStatusErrorType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Messages returned by the service if it cannot get user status</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="groupIdAut" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Identifier of the group (most often a library number) the user belongs to (for authentication purposes)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="holdQueuePosition" type="xs:positiveInteger">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">An order's position in the queue</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="language" type="xs:string"/>
 	<xs:element name="loan">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Details about a loan</xs:documentation>
@@ -125,9 +263,40 @@
 				<xs:element ref="ous:loanId"/>
 				<xs:element ref="ous:loanRecallDate" minOccurs="0"/>
 				<xs:element ref="ous:reminderLevel" minOccurs="0"/>
-				<xs:element ref="ous:userFiscalAccount" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
+	</xs:element>
+	<xs:element name="loanedItems">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Loans and loans count</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:loan" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="ous:loansCount" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="loanId" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Identifier of a loan</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="loanRecallDate" type="xs:dateTime">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Date when a loan has been recalled</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="loansCount" type="xs:integer">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Number of user's loans</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="mediumType" type="xs:string"/>
+	<xs:element name="needBeforeDate" type="xs:dateTime">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">User's last day of interest in an ordered item</xs:documentation>
+		</xs:annotation>
 	</xs:element>
 	<xs:element name="order">
 		<xs:annotation>
@@ -159,17 +328,6 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="loanedItems">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Loans and loans count</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ous:loan" minOccurs="0" maxOccurs="unbounded"/>
-				<xs:element ref="ous:loansCount" minOccurs="0"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
 	<xs:element name="orderedItems">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Orders and order counts</xs:documentation>
@@ -180,149 +338,6 @@
 				<xs:element ref="ous:ordersCount" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
-	</xs:element>
-	<xs:element name="userStatus">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">User status (loan and order)</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ous:loanedItems" minOccurs="0"/>
-				<xs:element ref="ous:orderedItems" minOccurs="0"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="renewLoanStatus">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Details about a renewd loan, returning either a dateDue, dateOfExpectedDelievery og renewLoanError </xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ous:loanId"/>
-				<xs:choice>
-					<xs:element ref="ous:dateDue"/>
-					<xs:element ref="ous:dateOfExpectedReply"/>
-					<xs:element ref="ous:renewLoanError"/>
-				</xs:choice>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="cancelOrder">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Parameters for an order to be cancelled</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ous:orderId"/>
-				<xs:element ref="ous:orderType"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="cancelOrderStatus">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Details about a cancelled order (via cancelOrderResponse - returning either orderCancelled or cancelOrderError for each orderId)</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ous:orderId"/>
-				<xs:choice>
-					<xs:element ref="ous:orderCancelled"/>
-					<xs:element ref="ous:cancelOrderError"/>
-				</xs:choice>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="getUserStatusError" type="ous:getUserStatusErrorType">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Messages returned by the service if it cannot get user status</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="renewLoanError" type="ous:renewLoanErrorType">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Messages returned by the service if a loan cannot be renewed</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="cancelOrderError" type="ous:cancelOrderErrorType">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Messages returned by the service if an order cannot be cancelled</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="updateOrderError" type="ous:cancelOrderErrorType">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Messages returned by the service if an order cannot be cancelled</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="agencyId" type="xs:string">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Identifier of user's library</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="authentication">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Parameters used for authentication purposes</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ous:groupIdAut"/>
-				<xs:element ref="ous:passwordAut"/>
-				<xs:element ref="ous:userIdAut"/>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="currency" type="xs:string">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Currency used in fiscal account.</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="callback" type="xs:string">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">If outputType=json.</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="dateAvailable" type="xs:dateTime">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Expected date for ordered item to be available</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="dateDue" type="xs:dateTime">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Last return date for a loan</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="dateOfExpectedReply" type="xs:dateTime">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Expected date of reply whether a loan can be renewed</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="groupIdAut" type="xs:string">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Identifier of the group (most often a library number) the user belongs to (for authentication purposes)</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="holdQueuePosition" type="xs:positiveInteger">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">An order's position in the queue</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="loanId" type="xs:string">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Identifier of a loan</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="loanRecallDate" type="xs:dateTime">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Date when a loan has been recalled</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="loansCount" type="xs:integer">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Number of user's loans</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="needBeforeDate" type="xs:dateTime">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">User's last day of interest in an ordered item</xs:documentation>
-		</xs:annotation>
 	</xs:element>
 	<xs:element name="orderCancelled" type="xs:string">
 		<xs:annotation>
@@ -369,9 +384,20 @@
 			<xs:documentation xml:lang="en">E.g. xml, json or php.</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	<xs:element name="pagination" type="xs:string"/>
 	<xs:element name="passwordAut" type="xs:string">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Password (for authentication purposes)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="pickUpAgency" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">The agency where the material is to be picked up</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="pickUpAgencySubdivision" type="xs:string">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Subdivison of the agency where the material is to be picked up</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="pickUpDate" type="xs:dateTime">
@@ -389,19 +415,42 @@
 			<xs:documentation xml:lang="en">Pick up id of the material at the pickUpAgency</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="pickUpAgency" type="xs:string">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">The agency where the material is to be picked up</xs:documentation>
-		</xs:annotation>
-	</xs:element>
-	<xs:element name="pickUpAgencySubdivision" type="xs:string">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Subdivison of the agency where the material is to be picked up</xs:documentation>
-		</xs:annotation>
-	</xs:element>
+	<xs:element name="placeOfPublication" type="xs:string"/>
+	<xs:element name="publicationDate" type="xs:string"/>
+	<xs:element name="publicationDateOfComponent" type="xs:string"/>
+	<xs:element name="publisher" type="xs:string"/>
 	<xs:element name="reminderLevel" type="xs:integer">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">The number of times a reminder for a given item (loan or order) has been sent</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="renewLoanError" type="ous:renewLoanErrorType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Messages returned by the service if a loan cannot be renewed</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="renewLoanStatus">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Details about a renewd loan, returning either a dateDue, dateOfExpectedDelievery og renewLoanError </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:loanId"/>
+				<xs:choice>
+					<xs:element ref="ous:dateDue"/>
+					<xs:element ref="ous:dateOfExpectedReply"/>
+					<xs:element ref="ous:renewLoanError"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="seriesTitleNumber" type="xs:string"/>
+	<xs:element name="sponsoringBody" type="xs:string"/>
+	<xs:element name="title" type="xs:string"/>
+	<xs:element name="titleOfComponent" type="xs:string"/>
+	<xs:element name="totalAmount" type="xs:decimal">
+		<xs:annotation>
+			<xs:documentation>Total amount (fees, replacement charges etc.) owed by user</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="updateOrder">
@@ -416,6 +465,11 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="updateOrderError" type="ous:cancelOrderErrorType">
+		<xs:annotation>
+			<xs:documentation xml:lang="en">Messages returned by the service if an order cannot be cancelled</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:element name="updateOrderStatus">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Details about a updated order</xs:documentation>
@@ -427,17 +481,6 @@
 					<xs:element ref="ous:orderUpdated"/>
 					<xs:element ref="ous:updateOrderError"/>
 				</xs:choice>
-			</xs:sequence>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="userFiscalAccount">
-		<xs:annotation>
-			<xs:documentation xml:lang="en">Details about amount owed by the user with regards to a specific loan</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="ous:currency"/>
-				<xs:element ref="ous:value"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -456,30 +499,18 @@
 			<xs:documentation xml:lang="en">User's pincode in local library system</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:element name="value" type="xs:string">
+	<xs:element name="userStatus">
 		<xs:annotation>
-			<xs:documentation xml:lang="en">Amount owed by the user.</xs:documentation>
+			<xs:documentation xml:lang="en">User status (loan and order)</xs:documentation>
 		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ous:loanedItems" minOccurs="0"/>
+				<xs:element ref="ous:orderedItems" minOccurs="0"/>
+				<xs:element ref="ous:fiscalAccount" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
 	</xs:element>
-	<xs:element name="author" type="xs:string"/>
-	<xs:element name="authorOfComponent" type="xs:string"/>
-	<xs:element name="bibliographicItemId" type="xs:string"/>
-	<xs:element name="bibliographicLevel" type="xs:string"/>
-	<xs:element name="bibliographicRecordId" type="xs:string"/>
-	<xs:element name="componentId" type="xs:string"/>
-	<xs:element name="edition" type="xs:string"/>
-	<xs:element name="electronicDataFormatType" type="xs:string"/>
-	<xs:element name="language" type="xs:string"/>
-	<xs:element name="mediumType" type="xs:string"/>
-	<xs:element name="pagination" type="xs:string"/>
-	<xs:element name="placeOfPublication" type="xs:string"/>
-	<xs:element name="publicationDate" type="xs:string"/>
-	<xs:element name="publicationDateOfComponent" type="xs:string"/>
-	<xs:element name="publisher" type="xs:string"/>
-	<xs:element name="seriesTitleNumber" type="xs:string"/>
-	<xs:element name="sponsoringBody" type="xs:string"/>
-	<xs:element name="titleOfComponent" type="xs:string"/>
-	<xs:element name="title" type="xs:string"/>
 	<xs:group name="bibliographicInfo">
 		<xs:annotation>
 			<xs:documentation xml:lang="en">Group of elements containing bibliographic information about an item</xs:documentation>
