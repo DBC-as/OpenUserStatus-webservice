@@ -184,9 +184,6 @@ class openUserStatus extends webServiceServer {
     self::_set($loan, "loanId", $item["UniqueItemId"]["ItemIdentifierValue"]);
     self::_set($loan, "loanRecallDate", $item["DateRecalled"]);
     self::_set($loan, "reminderLevel", $item["ReminderLevel"]);
-    self::_set($xuserFiscalAccount, 'currency', $item['UserFiscalAccount']['Currency']);
-    self::_set($xuserFiscalAccount, 'value', $item['UserFiscalAccount']['Value']);
-    self::_set($loan, "userFiscalAccount", $xuserFiscalAccount);
     return $loan;
   }
 
