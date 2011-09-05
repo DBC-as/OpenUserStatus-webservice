@@ -100,6 +100,24 @@ class openUserStatus extends webServiceServer {
     return $ret;
   }
 
+  private function _pack_agency($agency, $subdivision='') {
+    list($p1, $p2) = explode('-', $agency, 2);
+    $bib_id = isset($p2) ? $p2 : $p1;
+    if (empty($subdivision)) {
+      return 'DK-' . $bib_id;
+    } else {
+      return 'DK-' . $bib_id . '_' . $subdivision;
+    }
+  }
+
+  private function _unpack_agency($id) {
+    if (preg_match("/^DK-(\d+)(_(.*))?$/i", trim($id), $matches)) {
+      return array($matches[1], $matches[3]);
+    } else {
+      return array($id);
+    }
+  }
+
   private function lookup_loan($params,$fav_info,$itemid) {
     $ncip_lookup_item = new ncip();
     $lookup_item = $ncip_lookup_item->request($fav_info["ncip_lookup_user_address"],
@@ -162,10 +180,12 @@ class openUserStatus extends webServiceServer {
     self::_set($result, "holdQueuePosition", $request["HoldQueuePosition"]);
     self::_set($result, "needBeforeDate", $request["NeedBeforeDate"]);
     self::_set($result, "orderExpiryDate", $request["NeedBeforeDate"]);
-    self::_set($result, "pickupDate", $request["PickupDate"]);
-    self::_set($result, "pickupExpiryDate", $request["PickupExpiryDate"]);
-    self::_set($result, "pickupNumber", $request["LocationWithinBuilding"]);
-    self::_set($result, "pickupPlace", $request["ToAgencyId"]);
+    self::_set($result, "pickUpDate", $request["PickupDate"]);
+    self::_set($result, "pickUpExpiryDate", $request["PickupExpiryDate"]);
+    self::_set($result, "pickUpId", $request["LocationWithinBuilding"]);
+    list($agency, $subdivision) = self::_unpack_agency($request['FromAgencyId']);
+    self::_set($result, "pickUpAgency", $agency);
+    self::_set($result, "pickUpAgencySubdivision", $subdivision);
     self::_set($result, "reminderLevel", $request["ReminderLevel"]);
     return $result;
   }
@@ -237,19 +257,6 @@ class openUserStatus extends webServiceServer {
 
  /** \brief renewLoan - 
   *
-  * Request:
-  * - userId
-  * - userPincode
-  * - agencyId
-  * - loanId
-  * 
-  * Response:
-  * - renewLoanStatus
-  * - - loanId
-  * - - dateDue
-  * - - dateOfExpectedReply
-  * - - renewLoanError
-  * - renewLoanError
   *
   */
 
@@ -299,20 +306,6 @@ class openUserStatus extends webServiceServer {
 
  /** \brief cancelOrder - 
   *
-  * Request:
-  * - userId
-  * - userPincode
-  * - agencyId
-  * - cancelOrder
-  * - - orderId
-  * - - orderType
-  *
-  * Response:
-  * - cancelOrderStatus
-  * - - orderId
-  * - - orderCancelled
-  * - - cancelOrderError
-  * - cancelOrderError
   *
   */
 
@@ -361,59 +354,52 @@ class openUserStatus extends webServiceServer {
 
  /** \brief updateOrder - 
   *
-  * Request:
-  * - userId
-  * - userPincode
-  * - agencyId
-  * - updateOrder
-  * - - orderId
-  * - - pickupPlace
-  * - - newPickupPlace
-  *
-  * Response:
-  * - cancelOrderStatus
-  * - - orderId
-  * - - orderCancelled
-  * - - cancelOrderError
-  * - cancelOrderError
   *
   */
 
   function updateOrder($param) {
 //pjo 05-11-10 commented out aaa-line for testing. uncomment for production
-//  if (!$this->aaa->has_right("openuserstatus", 500)) return self::_build_error("cancelOrder", "authentication_error");
-    if (!isset($param->userId)) return self::_build_error("cancelOrder", "Element rule violated");
+//  if (!$this->aaa->has_right("openuserstatus", 500)) return self::_build_error("updateOrder", "authentication_error");
+    if (!isset($param->userId)) return self::_build_error("updateOrder", "Element rule violated");
     $userId = $param->userId->_value;
     $userPincode = $param->userPincode->_value;
-    if (!isset($param->agencyId)) return self::_build_error("cancelOrder", "Element rule violated");
+    if (!isset($param->agencyId)) return self::_build_error("updateOrder", "Element rule violated");
     $agencyId = $param->agencyId->_value;
     $bib_id = substr($agencyId, 3);
     if (!isset($param->updateOrder)) return self::_build_error("updateOrder", "Element rule violated");
     unset($updateOrders);
-    if (is_array($param->updateOrder))
-      foreach ($param->updateOrder as $cOrder) $updateOrders[] = array("orderId" => $cOrder->_value->orderId->_value, "pickupPlace" => $cOrder->_value->pickupPlace->_value, "newPickupPlace" => $cOrder->_value->newPickupPlace->_value);
-    else
-      $updateOrders[] = array("orderId" => $param->updateOrder->_value->orderId->_value, "pickupPlace" => $cOrder->_value->pickupPlace->_value, "newPickupPlace" => $cOrder->_value->newPickupPlace->_value);
+    if (is_array($param->updateOrder)) {
+      $orders = $param->updateOrder;
+    } else {
+      $orders[] = $param->updateOrder;
+    }
+    foreach ($orders as $cOrder) {
+      $updateOrders[] = array("orderId" => $cOrder->_value->orderId->_value,
+                              "pickUpAgency" => $cOrder->_value->pickUpAgency->_value,
+                              "pickUpAgencySubdivision" => $cOrder->_value->pickUpAgencySubdivision->_value,
+                             );
+    }
 
     $fav_info = self::_bib_info($bib_id);
     if (strtoupper($fav_info["ncip_update_request"]) !== "J") return self::_build_error("updateOrder", "Service unavailable");
 
     foreach ($updateOrders as $updateOrder) {
       $ncip_update = new ncip();
-      $cancel = $ncip_update->request($fav_info["ncip_update_request_address"],
-                                      array("Ncip" => "CancelRequestItem",
+      $update = $ncip_update->request($fav_info["ncip_update_request_address"],
+                                      array("Ncip" => "UpdateRequestItem",
                                             "FromAgencyId" => "DK-190101",
                                             "FromAgencyAuthentication" => $fav_info["ncip_update_request_password"],
-                                            "ToAgencyId" => $agencyId,
+                                            "ToAgencyId" => self::_pack_agency($updateOrder['pickUpAgency'], $updateOrder['pickUpAgencySubdivision']),
                                             "UniqueUserId" => array("UserIdentifierValue" => $userId, "UniqueAgencyId" => $agencyId),
                                             "UniqueRequestId" => array("RequestIdentifierValue" => $updateOrder["orderId"], "UniqueAgencyId" => $agencyId),
-                                            "RequestType" => $updateOrder["orderType"] ) );
+                                           )
+                                     );
       unset($orderStatus);
       self::_set($orderStatus, 'orderId', $updateOrder["orderId"]);
-      if (isset($cancel["Problem"]))
-        self::_set($orderStatus, 'updateOrderError', $cancel["Problem"]["Type"]);
+      if (isset($update["Problem"]))
+        self::_set($orderStatus, 'updateOrderError', $update["Problem"]["Type"]);
       else
-        self::_set($orderStatus, 'orderCancelled', '');
+        self::_set($orderStatus, 'orderUpdated', '');
       self::_add($response, 'updateOrderStatus', $orderStatus);
     }
     self::_set($ret, 'updateOrderResponse', $response);
@@ -424,73 +410,6 @@ class openUserStatus extends webServiceServer {
 
  /** \brief getUserStatus - 
   *
-  * Request:
-  * - serviceRequester
-  * - userId
-  * - userPincode
-  * - agencyId
-  *
-  * Response:
-  * - userStatus
-  * - - loanedItems
-  * - - - loansCount
-  * - - - loans
-  * - - - - loanId
-  * - - - - author
-  * - - - - authorOfComponent
-  * - - - - bibliographicItemId
-  * - - - - bibliographicRecordId
-  * - - - - componentId
-  * - - - - edition
-  * - - - - pagination
-  * - - - - placeOfPublication
-  * - - - - publicationDateOfComponent
-  * - - - - publisher
-  * - - - - seriesTitleNumber
-  * - - - - titleOfComponent
-  * - - - - bibliographicLevel
-  * - - - - sponsoringBody
-  * - - - - electronicDataFormatType
-  * - - - - language
-  * - - - - mediumType
-  * - - - - publicationDate
-  * - - - - title
-  * - - - - dateDue
-  * - - - - reminderLevel
-  * - - - - loanRecallDate
-  * - - orderedItems
-  * - - - ordersCount
-  * - - - order
-  * - - - - orderId
-  * - - - - author
-  * - - - - authorOfComponent
-  * - - - - bibliographicItemId
-  * - - - - bibliographicRecordId
-  * - - - - componentId
-  * - - - - edition
-  * - - - - pagination
-  * - - - - placeOfPublication
-  * - - - - publicationDateOfComponent
-  * - - - - publisher
-  * - - - - seriesTitleNumber
-  * - - - - titleOfComponent
-  * - - - - bibliographicLevel
-  * - - - - sponsoringBody
-  * - - - - electronicDataFormatType
-  * - - - - language
-  * - - - - mediumType
-  * - - - - publicationDate
-  * - - - - title
-  * - - - - orderStatus
-  * - - - - orderDate
-  * - - - - orderType
-  * - - - - dateAvailable
-  * - - - - holdQueuePosition
-  * - - - - needBeforeDate
-  * - - - - orderExpiryDate
-  * - - - - pickupDate
-  * - - - - pickupExpiryDate
-  * - - - - reminderLevel
   */
 
   function getUserStatus($param) {

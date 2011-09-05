@@ -16,6 +16,7 @@ wsdl = openuserstatus.wsdl
 soapAction[getUserStatus] = getUserStatusRequest
 soapAction[renewLoan] = renewLoanRequest
 soapAction[cancelOrder] = cancelOrderRequest
+soapAction[updateOrder] = updateOrderRequest
 
 ; validate
 ;validate[soap_request] = soap.xsd
@@ -24,6 +25,7 @@ soapAction[cancelOrder] = cancelOrderRequest
 
 ; prefixes and namespaces
 xmlns[] = http://oss.dbc.dk/ns/openuserstatus
+xmlns[ous] = http://oss.dbc.dk/ns/openuserstatus
 
 ; path to xml-examples
 xmldir = ./xml
@@ -38,7 +40,7 @@ logfile = /tmp/openuserstatus.log
 ;   WARNING - simple warnings
 ;   ERROR   - errors in response
 ;   FATAL   - major errors
-;   STAT    - Statístical logging
+;   STAT    - StatÃ­stical logging
 ;   TIMER   - timer logging
 ;   TRACE   - program trace
 ;   DEBUG   - debugging info
@@ -110,10 +112,19 @@ action[renewLoan][] = callback
 action[cancelOrder][] = userId
 action[cancelOrder][] = userPincode
 action[cancelOrder][] = agencyId
-action[cancelOrder][] = loanId
+action[cancelOrder][cancelOrder][] = orderId
+action[cancelOrder][cancelOrder][] = orderType
 action[cancelOrder][] = outputType
 action[cancelOrder][] = callback
 
+action[updateOrder][] = userId
+action[updateOrder][] = userPincode
+action[updateOrder][] = agencyId
+action[updateOrder][updateOrder][] = orderId
+action[updateOrder][updateOrder][] = pickUpAgency
+action[updateOrder][updateOrder][] = pickUpAgencySubdivision
+action[updateOrder][] = outputType
+action[updateOrder][] = callback
+
 
 [HowRU]
-
