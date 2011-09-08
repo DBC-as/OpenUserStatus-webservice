@@ -100,6 +100,7 @@ class openUserStatus extends webServiceServer {
     return $ret;
   }
 
+
   private function _pack_agency($agency, $subdivision='') {
     list($p1, $p2) = explode('-', $agency, 2);
     $bib_id = isset($p2) ? $p2 : $p1;
@@ -110,6 +111,7 @@ class openUserStatus extends webServiceServer {
     }
   }
 
+
   private function _unpack_agency($id) {
     if (preg_match("/^DK-(\d+)(_(.*))?$/i", trim($id), $matches)) {
       return array($matches[1], $matches[3]);
@@ -117,6 +119,18 @@ class openUserStatus extends webServiceServer {
       return array($id);
     }
   }
+
+
+  private function _parse_date_time($date) {
+    if (empty($date)) return null;
+    if (preg_match('/^(\d\d\d\d)$/', trim($date))) {
+      $dateTime = new DateTime($date . '-01-01');  // Hvis kun årstal er angivet, sæt dato til 1. januar det samme år
+    } else {
+      $dateTime = new DateTime($date);
+    }
+  return $dateTime->format(DateTime::ISO8601);
+  }
+
 
   private function lookup_loan($params,$fav_info,$itemid) {
     $ncip_lookup_item = new ncip();
@@ -172,37 +186,35 @@ class openUserStatus extends webServiceServer {
 
   private function set_basic_order(&$result, $request)
   {
-    self::_set($result, "orderDate", $request["DatePlaced"]);
+    self::_set($result, "orderDate", self::_parse_date_time($request["DatePlaced"]));
     self::_set($result, "orderId", $request["UniqueRequestId"]["RequestIdentifierValue"]);
     self::_set($result, "orderStatus", $request["RequestStatusType"]);
     self::_set($result, "orderType", $request["RequestType"]);
-    self::_set($result, "dateAvailable", $request["DateAvailable"]);
+    self::_set($result, "dateAvailable", self::_parse_date_time($request["DateAvailable"]));
     self::_set($result, "holdQueuePosition", $request["HoldQueuePosition"]);
-    self::_set($result, "needBeforeDate", $request["NeedBeforeDate"]);
-    self::_set($result, "orderExpiryDate", $request["NeedBeforeDate"]);
-    self::_set($result, "pickUpDate", $request["PickupDate"]);
-    self::_set($result, "pickUpExpiryDate", $request["PickupExpiryDate"]);
+    self::_set($result, "needBeforeDate", self::_parse_date_time($request["NeedBeforeDate"]));
+    self::_set($result, "orderExpiryDate", self::_parse_date_time($request["NeedBeforeDate"]));
+    self::_set($result, "pickUpDate", self::_parse_date_time($request["PickupDate"]));
+    self::_set($result, "pickUpExpiryDate", self::_parse_date_time($request["PickupExpiryDate"]));
     self::_set($result, "pickUpId", $request["LocationWithinBuilding"]);
     list($agency, $subdivision) = self::_unpack_agency($request['FromAgencyId']);
-    self::_set($result, "pickUpAgency", $agency);
+    self::_set($result, "pickUpAgency",  self::_pack_agency($agency));
     self::_set($result, "pickUpAgencySubdivision", $subdivision);
     self::_set($result, "reminderLevel", $request["ReminderLevel"]);
     return $result;
   }
 
 
-  private function set_loan($item)
-  {
+  private function set_loan($item) {
     $loan = self::set_bibliographic_info($item);
     return self::set_basic_loan($loan, $item);
   }
 
 
-  private function set_basic_loan(&$loan, $item)
-  {
-    self::_set($loan, "dateDue", $item["DateDue"]);
+  private function set_basic_loan(&$loan, $item) {
+    self::_set($loan, "dateDue", self::_parse_date_time($item["DateDue"]));
     self::_set($loan, "loanId", $item["UniqueItemId"]["ItemIdentifierValue"]);
-    self::_set($loan, "loanRecallDate", $item["DateRecalled"]);
+    self::_set($loan, "loanRecallDate", self::_parse_date_time($item["DateRecalled"]));
     self::_set($loan, "reminderLevel", $item["ReminderLevel"]);
     return $loan;
   }
@@ -218,27 +230,26 @@ class openUserStatus extends webServiceServer {
     self::_set($result, "edition", $info["Edition"]);
     self::_set($result, "pagination", $info["Pagination"]);
     self::_set($result, "placeOfPublication", $info["PlaceOfPublication"]);
-    self::_set($result, "publicationDate", $info["PublicationDate"]);
-    self::_set($result, "publicationDateOfComponent", $info["PublicationDateOfComponent"]);
+    self::_set($result, "publicationDateOfComponent", self::_parse_date_time($info["PublicationDateOfComponent"]));
     self::_set($result, "publisher", $info["Publisher"]);
     self::_set($result, "seriesTitleNumber", $info["SeriesTitleNumber"]);
-    self::_set($result, "title", $info["Title"]);
     self::_set($result, "titleOfComponent", $info["TitleOfComponent"]);
     self::_set($result, "bibliographicLevel", $info["BibliographicLevel"]);
     self::_set($result, "sponsoringBody", $info["SponsoringBody"]);
     self::_set($result, "electronicDataFormatType", $info["ElectronicDataFormatType"]);
     self::_set($result, "language", $info["Language"]);
     self::_set($result, "mediumType", $info["MediumType"]);
+    self::_set($result, "publicationDate", self::_parse_date_time($info["PublicationDate"]));
+    self::_set($result, "title", $info["Title"]);
     return $result;
   }
 
 
-  private function set_fiscalAccount($fiscal)
-  {
+  private function set_fiscalAccount($fiscal) {
     unset($result);
     self::_set($result, "fiscalTransactionAmount", $fiscal["MonetaryValue"]);
     self::_set($result, "fiscalTransactionCurrency", $fiscal["CurrencyCode"]);
-    self::_set($result, "fiscalTransactionDate", $fiscal["AccrualDate"]);
+    self::_set($result, "fiscalTransactionDate", self::_parse_date_time($fiscal["AccrualDate"]));
     self::_set($result, "fiscalTransactionType", $fiscal["FiscalTransactionType"]);
     self::_set($result, "bibliographicRecordId", $fiscal["BibliographicRecordId"]);
     self::_set($result, "author", $fiscal["Author"]);
@@ -292,8 +303,8 @@ class openUserStatus extends webServiceServer {
       if (isset($renew["Problem"])) {
         self::_set($loanStatus, 'renewLoanError', $renew["Problem"]["Type"]);
       } else {
-        self::_set($loanStatus, 'dateDue', $renew["DateDue"]);
-        self::_set($loanStatus, 'dateOfExpectedReply', $renew["DateOfExpectedReply"]);
+        self::_set($loanStatus, 'dateDue', self::_parse_date_time($renew["DateDue"]));
+        self::_set($loanStatus, 'dateOfExpectedReply', self::_parse_date_time($renew["DateOfExpectedReply"]));
       }
       self::_add($response, 'renewLoanStatus', $loanStatus);
     }
