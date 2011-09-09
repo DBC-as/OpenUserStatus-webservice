@@ -188,7 +188,7 @@ class openUserStatus extends webServiceServer {
   {
     self::_set($result, "orderDate", self::_parse_date_time($request["DatePlaced"]));
     self::_set($result, "orderId", $request["UniqueRequestId"]["RequestIdentifierValue"]);
-    self::_set($result, "orderStatus", $request["RequestStatusType"]);
+    self::_set($result, "orderStatus", ucfirst(strtolower($request["RequestStatusType"])));
     self::_set($result, "orderType", $request["RequestType"]);
     self::_set($result, "dateAvailable", self::_parse_date_time($request["DateAvailable"]));
     self::_set($result, "holdQueuePosition", $request["HoldQueuePosition"]);
