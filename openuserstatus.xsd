@@ -589,9 +589,9 @@
 	</xs:simpleType>
 	<xs:simpleType name="orderStatusType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="in process"/>
-			<xs:enumeration value="available for pickup"/>
-			<xs:enumeration value="expired"/>
+			<xs:enumeration value="In process"/>
+			<xs:enumeration value="Available for pickup"/>
+			<xs:enumeration value="Expired"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="orderTypeType">
