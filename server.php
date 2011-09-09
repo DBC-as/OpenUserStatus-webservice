@@ -128,7 +128,7 @@ class openUserStatus extends webServiceServer {
     } else {
       $dateTime = new DateTime($date);
     }
-  return $dateTime->format(DateTime::ISO8601);
+  return $dateTime->format(DateTime::W3C);
   }
 
 
