@@ -310,22 +310,16 @@
 				<xs:element ref="ous:orderId"/>
 				<xs:element ref="ous:orderStatus"/>
 				<xs:element ref="ous:orderType"/>
-				<xs:choice>
-					<xs:sequence>
-						<xs:element ref="ous:dateAvailable" minOccurs="0"/>
-						<xs:element ref="ous:holdQueuePosition"/>
-						<xs:element ref="ous:needBeforeDate" minOccurs="0"/>
-						<xs:element ref="ous:orderExpiryDate" minOccurs="0"/>
-					</xs:sequence>
-					<xs:sequence>
-						<xs:element ref="ous:pickUpDate" minOccurs="0"/>
-						<xs:element ref="ous:pickUpExpiryDate" minOccurs="0"/>
-						<xs:element ref="ous:pickUpId" minOccurs="0"/>
-						<xs:element ref="ous:pickUpAgency" minOccurs="0"/>
-						<xs:element ref="ous:pickUpAgencySubdivision" minOccurs="0"/>
-						<xs:element ref="ous:reminderLevel" minOccurs="0"/>
-					</xs:sequence>
-				</xs:choice>
+				<xs:element ref="ous:dateAvailable" minOccurs="0"/>
+				<xs:element ref="ous:holdQueuePosition" minOccurs="0"/>
+				<xs:element ref="ous:needBeforeDate" minOccurs="0"/>
+				<xs:element ref="ous:orderExpiryDate" minOccurs="0"/>
+				<xs:element ref="ous:pickUpDate" minOccurs="0"/>
+				<xs:element ref="ous:pickUpExpiryDate" minOccurs="0"/>
+				<xs:element ref="ous:pickUpId" minOccurs="0"/>
+				<xs:element ref="ous:pickUpAgency" minOccurs="0"/>
+				<xs:element ref="ous:pickUpAgencySubdivision" minOccurs="0"/>
+				<xs:element ref="ous:reminderLevel" minOccurs="0"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
