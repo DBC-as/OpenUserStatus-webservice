@@ -272,8 +272,7 @@ class openUserStatus extends webServiceServer {
   */
 
   function renewLoan($param) {
-//pjo 05-11-10 commented out aaa-line for testing. uncomment for production
-//  if (!$this->aaa->has_right("openuserstatus", 500)) return self::_build_error("renewLoan", "authentication_error");
+  if (!$this->aaa->has_right("openuserstatus", 500)) return self::_build_error("renewLoan", "authentication_error");
     if (!isset($param->userId)) return self::_build_error("renewLoan", "Element rule violated");
     $userId = $param->userId->_value;
     $userPincode = $param->userPincode->_value;
@@ -321,8 +320,7 @@ class openUserStatus extends webServiceServer {
   */
 
   function cancelOrder($param) {
-//pjo 05-11-10 commented out aaa-line for testing. uncomment for production
-//  if (!$this->aaa->has_right("openuserstatus", 500)) return self::_build_error("cancelOrder", "authentication_error");
+  if (!$this->aaa->has_right("openuserstatus", 500)) return self::_build_error("cancelOrder", "authentication_error");
     if (!isset($param->userId)) return self::_build_error("cancelOrder", "Element rule violated");
     $userId = $param->userId->_value;
     $userPincode = $param->userPincode->_value;
@@ -369,8 +367,7 @@ class openUserStatus extends webServiceServer {
   */
 
   function updateOrder($param) {
-//pjo 05-11-10 commented out aaa-line for testing. uncomment for production
-//  if (!$this->aaa->has_right("openuserstatus", 500)) return self::_build_error("updateOrder", "authentication_error");
+  if (!$this->aaa->has_right("openuserstatus", 500)) return self::_build_error("updateOrder", "authentication_error");
     if (!isset($param->userId)) return self::_build_error("updateOrder", "Element rule violated");
     $userId = $param->userId->_value;
     $userPincode = $param->userPincode->_value;
@@ -424,7 +421,7 @@ class openUserStatus extends webServiceServer {
   */
 
   function getUserStatus($param) {
-//    if (!$this->aaa->has_right("openuserstatus", 500)) return self::_build_error("getUserStatus", "authentication_error");
+    if (!$this->aaa->has_right("openuserstatus", 500)) return self::_build_error("getUserStatus", "authentication_error");
     if (!isset($param->userId)) return self::_build_error("getUserStatus", "Element rule violated");
     $userId = $param->userId->_value;
     $userPincode = $param->userPincode->_value;
