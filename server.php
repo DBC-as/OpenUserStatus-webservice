@@ -230,7 +230,7 @@ class openUserStatus extends webServiceServer {
     self::_set($result, "edition", $info["Edition"]);
     self::_set($result, "pagination", $info["Pagination"]);
     self::_set($result, "placeOfPublication", $info["PlaceOfPublication"]);
-    self::_set($result, "publicationDateOfComponent", self::_parse_date_time($info["PublicationDateOfComponent"]));
+    self::_set($result, "publicationDateOfComponent", $info["PublicationDateOfComponent"]);
     self::_set($result, "publisher", $info["Publisher"]);
     self::_set($result, "seriesTitleNumber", $info["SeriesTitleNumber"]);
     self::_set($result, "titleOfComponent", $info["TitleOfComponent"]);
@@ -239,7 +239,7 @@ class openUserStatus extends webServiceServer {
     self::_set($result, "electronicDataFormatType", $info["ElectronicDataFormatType"]);
     self::_set($result, "language", $info["Language"]);
     self::_set($result, "mediumType", $info["MediumType"]);
-    self::_set($result, "publicationDate", self::_parse_date_time($info["PublicationDate"]));
+    self::_set($result, "publicationDate", $info["PublicationDate"]);
     self::_set($result, "title", $info["Title"]);
     return $result;
   }
