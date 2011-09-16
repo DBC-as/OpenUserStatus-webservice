@@ -585,6 +585,7 @@
 			<xs:enumeration value="User authentification failed"/>
 			<xs:enumeration value="Unknown order"/>
 			<xs:enumeration value="Request already processed"/>
+			<xs:enumeration value="Unknown pickUpAgency"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="orderStatusType">
