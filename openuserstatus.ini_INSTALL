@@ -52,7 +52,7 @@ verbose = WARNING+ERROR+FATAL+STAT+TIMER+TRACE+DEBUG+Z3950+OCI
 dump_timer = openuserstatus(%s)
 
 ; default output format
-default_output_type=xml
+; default_output_type=xml
 
 
 [aaa]
