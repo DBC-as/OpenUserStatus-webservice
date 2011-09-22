@@ -300,7 +300,7 @@ class openUserStatus extends webServiceServer {
       unset($loanStatus);
       self::_set($loanStatus, "loanId", $loanId);
       if (isset($renew["Problem"])) {
-        self::_set($loanStatus, 'renewLoanError', $renew["Problem"]["Type"]);
+        self::_set($loanStatus, 'renewLoanError', ucfirst(strtolower($renew["Problem"]["Type"])));
       } else {
         self::_set($loanStatus, 'dateDue', self::_parse_date_time($renew["DateDue"]));
         self::_set($loanStatus, 'dateOfExpectedReply', self::_parse_date_time($renew["DateOfExpectedReply"]));
@@ -350,7 +350,7 @@ class openUserStatus extends webServiceServer {
       unset($orderStatus);
       self::_set($orderStatus, 'orderId', $cancelOrder["orderId"]);
       if (isset($cancel["Problem"]))
-        self::_set($orderStatus, 'cancelOrderError', $cancel["Problem"]["Type"]);
+        self::_set($orderStatus, 'cancelOrderError', ucfirst(strtolower($cancel["Problem"]["Type"])));
       else
         self::_set($orderStatus, 'orderCancelled', '');
       self::_add($response, 'cancelOrderStatus', $orderStatus);
@@ -405,7 +405,7 @@ class openUserStatus extends webServiceServer {
       unset($orderStatus);
       self::_set($orderStatus, 'orderId', $updateOrder["orderId"]);
       if (isset($update["Problem"]))
-        self::_set($orderStatus, 'updateOrderError', $update["Problem"]["Type"]);
+        self::_set($orderStatus, 'updateOrderError', ucfirst(strtolower($update["Problem"]["Type"])));
       else
         self::_set($orderStatus, 'orderUpdated', '');
       self::_add($response, 'updateOrderStatus', $orderStatus);
