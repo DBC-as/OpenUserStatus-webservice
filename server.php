@@ -404,10 +404,15 @@ class openUserStatus extends webServiceServer {
                                      );
       unset($orderStatus);
       self::_set($orderStatus, 'orderId', $updateOrder["orderId"]);
-      if (isset($update["Problem"]))
-        self::_set($orderStatus, 'updateOrderError', ucfirst(strtolower($update["Problem"]["Type"])));
-      else
+      if (isset($update["Problem"])) {
+        if (($update['Problem']['Error'] == 'ProcessingError') and ($update['Problem']['Type'] == 'Temporary Processing Failure')) {
+          self::_set($orderStatus, 'updateOrderError', 'Unknown pickUpAgency');
+        } else {
+          self::_set($orderStatus, 'updateOrderError', ucfirst(strtolower($update["Problem"]["Type"])));
+        }
+      } else {
         self::_set($orderStatus, 'orderUpdated', '');
+      }
       self::_add($response, 'updateOrderStatus', $orderStatus);
     }
     self::_set($ret, 'updateOrderResponse', $response);
