@@ -349,10 +349,15 @@ class openUserStatus extends webServiceServer {
                                             "RequestType" => $cancelOrder["orderType"] ) );
       unset($orderStatus);
       self::_set($orderStatus, 'orderId', $cancelOrder["orderId"]);
-      if (isset($cancel["Problem"]))
-        self::_set($orderStatus, 'cancelOrderError', ucfirst(strtolower($cancel["Problem"]["Type"])));
-      else
+      if (isset($cancel["Problem"])) {
+        if (($cancel['Problem']['Error'] == 'ProcessingError') and ($cancel['Problem']['Type'] == 'Unknown Request')) {
+          self::_set($orderStatus, 'cancelOrderError', 'Unknown order');
+        } else {
+          self::_set($orderStatus, 'cancelOrderError', ucfirst(strtolower($cancel["Problem"]["Type"])));
+        }
+      } else {
         self::_set($orderStatus, 'orderCancelled', '');
+      }
       self::_add($response, 'cancelOrderStatus', $orderStatus);
     }
     self::_set($ret, 'cancelOrderResponse', $response);
