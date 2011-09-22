@@ -435,7 +435,7 @@ class openUserStatus extends webServiceServer {
     if (strtoupper($fav_info["ncip_lookup_user"]) !== "J") return self::_build_error("getUserStatus", "Service unavailable");
     
     $lookup_user = self::lookup_user($param,$fav_info);
-    if (isset($lookup_user["Problem"])) return self::_build_error("getUserStatus", $lookup_user["Problem"]["Type"]);
+    if (isset($lookup_user["Problem"])) return self::_build_error("getUserStatus", ucfirst(strtolower($lookup_user["Problem"]["Type"])));
 
     $lookup_items = array();
     if (is_array($lookup_user["LoanedItem"]))
