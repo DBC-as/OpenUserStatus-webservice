@@ -465,9 +465,9 @@
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="updateOrderError" type="ous:cancelOrderErrorType">
+	<xs:element name="updateOrderError" type="ous:updateOrderErrorType">
 		<xs:annotation>
-			<xs:documentation xml:lang="en">Messages returned by the service if an order cannot be cancelled</xs:documentation>
+			<xs:documentation xml:lang="en">Messages returned by the service if an order cannot be updated</xs:documentation>
 		</xs:annotation>
 	</xs:element>
 	<xs:element name="updateOrderStatus">
