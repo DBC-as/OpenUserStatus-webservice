@@ -103,16 +103,16 @@
 	</wsdl:binding>
 	<wsdl:service name="openUserStatusService">
 		<wsdl:port name="getUserStatusPortType" binding="ousw:getUserStatusSoapBinding">
-			<soap:address location="http://didicas.dbc.dk/openuserstatus"/>
+			<soap:address location="http://openuserstatus.addi.dk/1.1/"/>
 		</wsdl:port>
 		<wsdl:port name="renewLoanPortType" binding="ousw:renewLoanSoapBinding">
-			<soap:address location="http://didicas.dbc.dk/openuserstatus"/>
+			<soap:address location="http://openuserstatus.addi.dk/1.1/"/>
 		</wsdl:port>
 		<wsdl:port name="cancelOrderPortType" binding="ousw:cancelOrderSoapBinding">
-			<soap:address location="http://didicas.dbc.dk/openuserstatus"/>
+			<soap:address location="http://openuserstatus.addi.dk/1.1/"/>
 		</wsdl:port>
 		<wsdl:port name="updateOrderPortType" binding="ousw:updateOrderSoapBinding">
-			<soap:address location="http://didicas.dbc.dk/openuserstatus"/>
+			<soap:address location="http://openuserstatus.addi.dk/1.1/"/>
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>
