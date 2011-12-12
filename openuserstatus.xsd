@@ -612,6 +612,7 @@
 			<xs:enumeration value="xml"/>
 			<xs:enumeration value="json"/>
 			<xs:enumeration value="php"/>
+			<xs:enumeration value="ncip"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>
