@@ -32,6 +32,16 @@ define("HTTP_PROXY", "phobos.dbc.dk:3128");
 class openUserStatus extends webServiceServer {
 
 
+/** \brief Constructor
+*
+*/
+  public function __construct($inifile) {
+    global $_DEBUG;
+    parent::__construct($inifile);
+    $_DEBUG = $this->debug;
+  }
+
+
 /** \brief _set
 *
 */
