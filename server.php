@@ -107,6 +107,9 @@ class openUserStatus extends webServiceServer {
     $error_name = $name . "Error";
     self::_set($error, $error_name, $text);
     self::_set($ret, $resp_name, $error);
+    if (strtolower($this->debug) == 'ncip') {
+      die('debug die');
+    }
     return $ret;
   }
 
@@ -144,13 +147,14 @@ class openUserStatus extends webServiceServer {
 
   private function lookup_loan($params,$fav_info,$itemid) {
     $ncip_lookup_item = new ncip();
-    $lookup_item = $ncip_lookup_item->request($fav_info["ncip_lookup_user_address"],
-					      array("Ncip" => "LookupItem",
-						    "FromAgencyId" => "DK-190101",
-						    "FromAgencyAuthentication" => $fav_info["ncip_lookup_user_password"],
-						    "ToAgencyId" => $params->agencyId->_value,
-						    "UniqueItemId" => $itemid
-						    ));
+    $lookup_item = $ncip_lookup_item->request(
+      $fav_info["ncip_lookup_user_address"],
+      array("Ncip" => "LookupItem",
+            "FromAgencyId" => "DK-190101",
+            "FromAgencyAuthentication" => $fav_info["ncip_lookup_user_password"],
+            "ToAgencyId" => $params->agencyId->_value,
+            "UniqueItemId" => $itemid),
+      $this->debug == 'ncip');
     return $lookup_item;
   }
 
@@ -159,15 +163,13 @@ class openUserStatus extends webServiceServer {
     $ncip_lookup_request = new ncip();
     $lookup_request = $ncip_lookup_request->request(
       $fav_info["ncip_lookup_user_address"],
-      array(
-        "Ncip" => "LookupRequest",
-        "FromAgencyId" => "DK-190101",
-        "FromAgencyAuthentication" => $fav_info["ncip_lookup_user_password"],
-        "ToAgencyId" => $params->agencyId->_value,
-        "UniqueRequestId" => $itemid,
-      )
-    );
-    return $lookup_request;					    
+      array("Ncip" => "LookupRequest",
+            "FromAgencyId" => "DK-190101",
+            "FromAgencyAuthentication" => $fav_info["ncip_lookup_user_password"],
+            "ToAgencyId" => $params->agencyId->_value,
+            "UniqueRequestId" => $itemid),
+      $this->debug == 'ncip');
+    return $lookup_request;
   }
 
 
@@ -175,15 +177,13 @@ class openUserStatus extends webServiceServer {
     $ncip_lookup_user = new ncip();
     $lookup_user = $ncip_lookup_user->request(
       $fav_info["ncip_lookup_user_address"],
-      array(
-        "Ncip" => "LookupUser",
-        "FromAgencyId" => "DK-190101",
-        "FromAgencyAuthentication" => $fav_info["ncip_lookup_user_password"],
-        "ToAgencyId" => $params->agencyId->_value,
-        "UserId" => $params->userId->_value,
-        "UserPIN" => $params->userPincode->_value,
-      )
-    );
+      array("Ncip" => "LookupUser",
+            "FromAgencyId" => "DK-190101",
+            "FromAgencyAuthentication" => $fav_info["ncip_lookup_user_password"],
+            "ToAgencyId" => $params->agencyId->_value,
+            "UserId" => $params->userId->_value,
+            "UserPIN" => $params->userPincode->_value),
+      $this->debug == 'ncip');
     return $lookup_user;    
   }
 
