@@ -57,8 +57,10 @@ dump_timer = openuserstatus(%s)
 
 [aaa]
 ; aaa Authentication, Access control and Accounting
+;
 ; if aaa_credentials is set, the rights-object is created from
-; the FORS-server or aaa_ip_rights below
+; aaa_ip_rights below if ip-match otherwise it is set from
+; the FORS-server if aaa_credentials contains a valid fors-login
 ;
 ; oci credentials for FORS server
 ;aaa_credentials = some_user/some_pwd@some.server.dbc.dk
